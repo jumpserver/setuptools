@@ -1,0 +1,18 @@
+[Unit]
+Description=Jumpserver Core Server
+Documentation=https://github.com/jumpserver/jumpserver.git
+After=network.target mariadb.service redis.service docker.service
+Wants=mariadb.service redis.service docker.service
+
+[Service]
+Type=forking
+TimeoutStartSec=0
+WorkingDirectory=/opt/jumpserver
+PIDFile=/opt/jumpserver/tmp/jms.pid
+Environment="PATH=/opt/py3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin"
+ExecStart=/opt/jumpserver/jms start -d
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/opt/jumpserver/jms stop
+
+[Install]
+WantedBy=multi-user.target

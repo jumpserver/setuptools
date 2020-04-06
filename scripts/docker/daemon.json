@@ -1,0 +1,3 @@
+{
+    "registry-mirrors": ["https://dockerhub.azk8s.cn", "https://mirror.ccs.tencentyun.com", "https://docker.mirrors.ustc.edu.cn/"]
+}
