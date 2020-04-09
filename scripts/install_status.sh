@@ -69,7 +69,7 @@ function check_guacamole() {
 }
 
 function check_nginx() {
-    echo -ne "\033[35m Nginx 启动检测 \t\t........................ \033[0m"
+    echo -ne "\033[35m Nginx 启动检测 \t........................ \033[0m"
     if [ ! "$(systemctl status nginx | grep running)" ]; then
         echo "[ERROR]"
         bash $BASE_DIR/install_nginx.sh >/dev/null 2>&1
