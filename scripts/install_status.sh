@@ -50,7 +50,7 @@ function check_core() {
 
 function check_koko() {
     echo -ne "\033[35m Jms_koko 启动检测 \t........................ \033[0m"
-    if [ "$(docker ps | grep jms_koko)" ]; then
+    if [ ! "$(docker ps | grep jms_koko)" ]; then
         echo "[ERROR]"
         bash $BASE_DIR/install_koko.sh >/dev/null 2>&1
     else
@@ -60,7 +60,7 @@ function check_koko() {
 
 function check_guacamole() {
     echo -ne "\033[35m Jms_guacamole 检测 \t........................ \033[0m"
-    if [ "$(docker ps | grep jms_guacamole)" ]; then
+    if [ ! "$(docker ps | grep jms_guacamole)" ]; then
         echo "[ERROR]"
         bash $BASE_DIR/install_guacamole.sh >/dev/null 2>&1
     else
