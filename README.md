@@ -11,7 +11,6 @@ git clone --depth=1 https://github.com/jumpserver/setuptools.git
 cd jms_install
 cp config_example.conf config.conf
 vi config.conf
-chmod +x ./jmsctl.sh
 ./jmsctl.sh -h
 ```
 Install 安装

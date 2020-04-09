@@ -33,7 +33,7 @@ function main {
     if [ ! -f "/etc/docker/daemon.json" ]; then
         config_docker
     fi
-    if [ ! "$(systemctl status docker | grep running)" ]; then
+    if [ ! "$(systemctl status docker | grep Active | grep running)" ]; then
         start_docker
     fi
 }

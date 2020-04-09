@@ -14,7 +14,6 @@ function download_core() {
         rm -rf $install_dir/jumpserver
         echo "[ERROR] 下载 jumpserver 失败"
     }
-
 }
 
 function prepare_install() {
@@ -101,7 +100,7 @@ function main() {
     if [ ! -f "/usr/lib/systemd/system/jms_core.service" ]; then
         config_systemd
     fi
-    if [ ! "$(systemctl status jms_core | grep running)" ]; then
+    if [ ! "$(systemctl status jms_core | grep Active | grep running)" ]; then
         start_core
     fi
 }

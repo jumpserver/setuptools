@@ -34,7 +34,7 @@ function set_selinux() {
 }
 
 function main() {
-    if [ "$(systemctl status firewalld | grep running)" ]; then
+    if [ "$(systemctl status firewalld | grep Active | grep running)" ]; then
         set_firewall
     fi
     if [ "$(getenforce)" != "Disabled" ]; then

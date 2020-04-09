@@ -7,7 +7,9 @@ SCRIPT_DIR=${BASE_DIR}/scripts
 action=$1
 
 if [ ! -f "$PROJECT_DIR/config.conf" ]; then
-    cp $PROJECT_DIR/config_example.conf $PROJECT_DIR/config.conf
+    echo -e "Error: No config file found."
+    echo -e "You can run 'cp config_example.conf config.conf', and edit it."
+    exit 1
 fi
 
 source ${PROJECT_DIR}/config.conf

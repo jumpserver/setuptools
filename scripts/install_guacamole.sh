@@ -23,7 +23,7 @@ function main() {
         if [ "$(docker exec jms_guacamole env | grep BOOTSTRAP_TOKEN | cut -d = -f2)" != "$BOOTSTRAP_TOKEN" ]; then
             docker stop jms_guacamole
             docker rm jms_guacamole
-            start_koko
+            start_guacamole
         fi
     fi
 }

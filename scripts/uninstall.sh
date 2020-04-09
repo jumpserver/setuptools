@@ -7,19 +7,19 @@ source ${PROJECT_DIR}/config.conf
 
 echo -e "\033[31m 准备从系统中卸载 jumpserver \033[0m"
 
-if [ "$(systemctl status nginx | grep running)" ]; then
+if [ "$(systemctl status nginx | grep Active | grep running)" ]; then
     systemctl stop nginx
 fi
 rm -rf /etc/nginx/conf.d/jumpserver.conf
 
-if [ "$(systemctl status docker | grep running)" ]; then
+if [ "$(systemctl status docker | grep Active | grep running)" ]; then
     docker stop jms_koko jms_guacamole
     docker rm jms_koko jms_guacamole
     docker rmi jumpserver/jms_koko:$Version jumpserver/jms_guacamole:$Version
     systemctl stop docker
 fi
 
-if [ "$(systemctl status jms_core | grep running)" ]; then
+if [ "$(systemctl status jms_core | grep Active | grep running)" ]; then
     systemctl stop jms_core
 fi
 rm -rf /usr/lib/systemd/system/jms_core.service
@@ -28,7 +28,7 @@ rm -rf $install_dir/luna
 rm -rf $install_dir/jumpserver
 
 if [ $REDIS_HOST == 127.0.0.1 ]; then
-    if [ "$(systemctl status redis | grep running)" ]; then
+    if [ "$(systemctl status redis | grep Active | grep running)" ]; then
         if [ ! "$REDIS_PASSWORD" ]; then
             redis-cli -h $REDIS_HOST -p $REDIS_PORT flushall
         else
@@ -38,13 +38,13 @@ if [ $REDIS_HOST == 127.0.0.1 ]; then
     fi
 fi
 if [ $DB_HOST == 127.0.0.1 ]; then
-    if [ "$(systemctl status mariadb | grep running)" ]; then
+    if [ "$(systemctl status mariadb | grep Active | grep running)" ]; then
         mysql -uroot -e"drop user '$DB_USER'@'$DB_HOST';drop database $DB_NAME;flush privileges;"
         systemctl stop mariadb
     fi
 fi
 
-if [ "$(systemctl status firewalld | grep running)" ]; then
+if [ "$(systemctl status firewalld | grep Active | grep running)" ]; then
     if [ "$(firewall-cmd --list-all | grep $http_port)" ]; then
         firewall-cmd --zone=public --remove-port=$http_port/tcp --permanent
         firewall-cmd --reload

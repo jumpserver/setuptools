@@ -39,7 +39,7 @@ function check_py3() {
 
 function check_core() {
     echo -ne "\033[35m Jms_core 启动检测 \t........................ \033[0m"
-    if [ ! "$(systemctl status jms_core | grep running)" ]; then
+    if [ ! "$(systemctl status jms_core | grep Active | grep running)" ]; then
         echo "[ERROR]"
         echo > $PROJECT_DIR/$Version/core_flag
         bash $BASE_DIR/install_core.sh >/dev/null 2>&1
@@ -70,7 +70,7 @@ function check_guacamole() {
 
 function check_nginx() {
     echo -ne "\033[35m Nginx 启动检测 \t........................ \033[0m"
-    if [ ! "$(systemctl status nginx | grep running)" ]; then
+    if [ ! "$(systemctl status nginx | grep Active | grep running)" ]; then
         echo "[ERROR]"
         bash $BASE_DIR/install_nginx.sh >/dev/null 2>&1
         systemctl restart nginx

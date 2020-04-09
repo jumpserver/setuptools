@@ -52,7 +52,7 @@ function main {
     if [ ! -f /etc/nginx/conf.d/jumpserver.conf ];then
         config_nginx
     fi
-    if [ ! "$(systemctl status nginx | grep running)" ]; then
+    if [ ! "$(systemctl status nginx | grep Active | grep running)" ]; then
         start_nginx
     fi
     if [ ! -d "$install_dir/luna" ]; then
