@@ -58,6 +58,11 @@ function main() {
          ;;
       -h)
          usage
+         ;;
+      *)
+         echo -e "jmsctl: unknown option: '$action'"
+         echo -e "See 'jmsctl --help' \n"
+         usage
     esac
 }
 
