@@ -24,6 +24,7 @@ function usage() {
    echo "  start     启动 JumpServer"
    echo "  stop      停止 JumpServer"
    echo "  restart   重启 JumpServer"
+   echo "  status    检查 JumpServer"
    echo "  uninstall 卸载 JumpServer"
    echo "  upgrade   升级 JumpServer"
 }
@@ -48,6 +49,9 @@ function main() {
       restart)
          bash ${SCRIPT_DIR}/stop.sh
          bash ${SCRIPT_DIR}/start.sh
+         ;;
+      status)
+         bash ${SCRIPT_DIR}/install_status.sh
          ;;
       --help)
          usage
