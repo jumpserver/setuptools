@@ -20,6 +20,9 @@ function config_mariadb() {
         DB_PASSWORD=`cat /dev/urandom | tr -dc A-Za-z0-9 | head -c 24`
         sed -i "0,/DB_PASSWORD=/s//DB_PASSWORD=$DB_PASSWORD/" $PROJECT_DIR/config.conf
     fi
+    if [ ! "$(systemctl status mariadb | grep running)" ]; then
+        sleep 5s
+    fi
     mysql -uroot -e "create database $DB_NAME default charset 'utf8';grant all on $DB_NAME.* to '$DB_USER'@'$DB_HOST' identified by '$DB_PASSWORD';flush privileges;"
 }
 
