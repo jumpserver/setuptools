@@ -29,7 +29,11 @@ rm -rf $install_dir/jumpserver
 
 if [ $REDIS_HOST == 127.0.0.1 ]; then
     if [ "$(systemctl status redis | grep running)" ]; then
-        redis-cli flushall
+        if [ ! "$REDIS_PASSWORD" ]; then
+            redis-cli -h $REDIS_HOST -p $REDIS_PORT flushall
+        else
+            redis-cli -h $REDIS_HOST -p $REDIS_PORT -a $REDIS_PASSWORD flushall
+        fi
         systemctl stop redis
     fi
 fi
