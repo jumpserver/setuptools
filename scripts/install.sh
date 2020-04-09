@@ -58,6 +58,7 @@ function main() {
         bash $BASE_DIR/install_redis.sh
     fi
     bash $BASE_DIR/install_nginx.sh
+    bash $BASE_DIR/install_py3.sh
     bash $BASE_DIR/install_core.sh
     bash $BASE_DIR/install_koko.sh
     bash $BASE_DIR/install_guacamole.sh

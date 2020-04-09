@@ -8,7 +8,7 @@ source ${PROJECT_DIR}/config.conf
 function start_guacamole() {
     echo ">> Install Jms_guacamole"
     if [ ! "$(docker ps -a | grep jms_guacamole | grep $Version)" ]; then
-        if [ "$(docker ps -a | grep jms_guacamole)" ]
+        if [ "$(docker ps -a | grep jms_guacamole)" ]; then
             docker stop jms_guacamole
             docker rm jms_guacamole
         fi
