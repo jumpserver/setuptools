@@ -16,9 +16,13 @@ function install_nginx() {
 
 function download_luna() {
     if [ ! -f "$PROJECT_DIR/$Version/luna.tar.gz" ]; then
-        wget -O $PROJECT_DIR/$Version/luna.tar.gz http://demo.jumpserver.org/download/luna/$Version/luna.tar.gz
+        wget -qO $PROJECT_DIR/$Version/luna.tar.gz http://demo.jumpserver.org/download/luna/$Version/luna.tar.gz
     fi
-    tar xf $PROJECT_DIR/$Version/luna.tar.gz -C $install_dir/
+    tar xf $PROJECT_DIR/$Version/luna.tar.gz -C $install_dir/ || {
+        rm -rf $PROJECT_DIR/$Version/luna.tar.gz
+        rm -rf $install_dir/luna
+        echo "[ERROR] 下载 luna 失败"
+    }
 }
 
 function start_nginx() {

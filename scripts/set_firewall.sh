@@ -22,7 +22,7 @@ function set_firewall() {
 
 function set_selinux() {
     if [ ! "$(rpm -qa | grep policycoreutils-python)" ]; then
-          yum -y install policycoreutils-python
+          yum install -y policycoreutils-python
     fi
     setsebool -P httpd_can_network_connect 1
     if [ "$http_port" != "80" ]; then

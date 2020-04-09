@@ -16,10 +16,8 @@ function install_docker() {
 }
 
 function config_docker {
-    if [ ! -f "/etc/docker/daemon.json" ]; then
-        mkdir -p /etc/docker/
-        cp $BASE_DIR/docker/daemon.json /etc/docker/daemon.json
-    fi
+    mkdir -p /etc/docker/
+    cp $BASE_DIR/docker/daemon.json /etc/docker/daemon.json
 }
 
 function start_docker {
@@ -31,6 +29,8 @@ function main {
     which docker >/dev/null 2>&1
     if [ $? -ne 0 ];then
         install_docker
+    fi
+    if [ ! -f "/etc/docker/daemon.json" ]; then
         config_docker
     fi
     if [ ! "$(systemctl status docker | grep running)" ]; then

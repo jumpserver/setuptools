@@ -63,4 +63,4 @@ fi
 
 echo -e "\033[31m 已经成功清理 jumpserver 相关文件 \033[0m"
 echo -e "\033[31m 请自行卸载 docker nginx redis mariadb 服务 \033[0m"
-echo -e "\033[31m yum -y docker-ce nginx redis mariadb-server mariadb-devel mariadb \033[0m"
+echo -e "\033[31m yum remove -y docker-ce docker-ce-cli nginx redis mariadb-server mariadb-devel mariadb-libs mariadb \033[0m"

@@ -38,21 +38,27 @@ fi
 
 cd $install_dir/jumpserver
 git pull || {
-    echo "\033[31m 获取 jumpserver 仓库更新失败 \033[0m"
+    echo "\033[31m 获取 jumpserver 仓库更新失败, 请检查网络是否正常或尝试重新执行升级脚本 \033[0m"
     exit 1
 }
 
 source $install_dir/py3/bin/activate
 pip install --upgrade pip setuptools
 pip install -r $install_dir/jumpserver/requirements/requirements.txt || {
-    echo "\033[31m 升级 python 依赖失败 \033[0m"
+    echo "\033[31m 升级 python 依赖失败, 请检查网络是否正常或者更换 pypi 源 \033[0m"
     exit 1
 }
 
 systemctl start jms_core
 
-docker run --name jms_koko -d -p $ssh_port:2222 -p 127.0.0.1:5000:5000 -e CORE_HOST=http://$Server_IP:8080 -e BOOTSTRAP_TOKEN=$BOOTSTRAP_TOKEN --restart=always jumpserver/jms_koko:$Upgrade_Version
-docker run --name jms_guacamole -d -p 127.0.0.1:8081:8080 -e JUMPSERVER_SERVER=http://$Server_IP:8080 -e BOOTSTRAP_TOKEN=$BOOTSTRAP_TOKEN --restart=always jumpserver/jms_guacamole:$Upgrade_Version
+docker run --name jms_koko -d -p $ssh_port:2222 -p 127.0.0.1:5000:5000 -e CORE_HOST=http://$Server_IP:8080 -e BOOTSTRAP_TOKEN=$BOOTSTRAP_TOKEN --restart=always jumpserver/jms_koko:$Upgrade_Version || {
+    echo "\033[31m jms_koko 镜像下载失败, 请检查网络是否正常或者手动 pull 镜像 \033[0m"
+    exit 1
+}
+docker run --name jms_guacamole -d -p 127.0.0.1:8081:8080 -e JUMPSERVER_SERVER=http://$Server_IP:8080 -e BOOTSTRAP_TOKEN=$BOOTSTRAP_TOKEN --restart=always jumpserver/jms_guacamole:$Upgrade_Version || {
+    echo "\033[31m jms_guacamole 镜像下载失败, 请检查网络是否正常或者手动 pull 镜像 \033[0m"
+    exit 1
+}
 
 if [ ! -d "$PROJECT_DIR/$Upgrade_Version" ]; then
     mkdir -p $PROJECT_DIR/$Upgrade_Version
@@ -64,7 +70,7 @@ cd $install_dir
 rm -rf $install_dir/luna*
 
 if [ ! -f "$PROJECT_DIR/$Upgrade_Version/luna.tar.gz" ]; then
-    wget -O $PROJECT_DIR/$Upgrade_Version/luna.tar.gz http://demo.jumpserver.org/download/luna/$Upgrade_Version/luna.tar.gz
+    wget -qO $PROJECT_DIR/$Upgrade_Version/luna.tar.gz http://demo.jumpserver.org/download/luna/$Upgrade_Version/luna.tar.gz
 fi
 tar -xf $PROJECT_DIR/$Upgrade_Version/luna.tar.gz -C $install_dir
 

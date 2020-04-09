@@ -6,7 +6,8 @@ PROJECT_DIR=$(dirname $(cd $(dirname "$0");pwd))
 source ${PROJECT_DIR}/config.conf
 
 function success() {
-    echo -e "\033[31m Jumpserver 安装成功!\n 默认登陆信息: \033[0m"
+    echo -e "\033[31m Jumpserver 安装成功!\n\n 默认登陆信息: \033[0m"
+    echo -e "\033[31m http://$Server_IP:$http_port \033[0m"
     echo -e "\033[32m username: admin \033[0m"
     echo -e "\033[32m password: admin \033[0m"
     echo -e "\033[33m [请在防火墙和安全组放行 $http_port 和 $ssh_port 端口] \033[0m"
@@ -20,12 +21,13 @@ function prepare_install() {
     if [ ! "$(rpm -qa | grep epel-release)" ]; then
         yum install -y epel-release
     fi
-    if grep -q 'mirrors.aliyun.com' /etc/yum.repos.d/CentOS-Base.repo; then
+    if grep -q 'mirrors.aliyun.com' /etc/yum.repos.d/epel.repo; then
         true
     else
-        wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
-        wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo
+        wget -qO /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+        wget -qO /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo
         sed -i -e '/mirrors.cloud.aliyuncs.com/d' -e '/mirrors.aliyuncs.com/d' /etc/yum.repos.d/CentOS-Base.repo
+        yum clean all
     fi
     which git >/dev/null 2>&1
     if [ $? -ne 0 ];then
@@ -35,9 +37,9 @@ function prepare_install() {
     if [ $? -ne 0 ];then
         yum install -y gcc
     fi
-    yum update -y
     if [ ! -d "$PROJECT_DIR/$Version" ]; then
         mkdir -p $PROJECT_DIR/$Version
+        yum update -y
     fi
 }
 
@@ -59,6 +61,7 @@ function main() {
     bash $BASE_DIR/install_core.sh
     bash $BASE_DIR/install_koko.sh
     bash $BASE_DIR/install_guacamole.sh
+    bash $BASE_DIR/install_status.sh
     success
 }
 

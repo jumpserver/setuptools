@@ -32,6 +32,12 @@ function main() {
     fi
     if [ ! -d "/var/lib/mysql/$DB_NAME" ]; then
         config_mariadb
+    else
+        mysql -h$DB_HOST -P$DB_PORT -u$DB_USER -p$DB_PASSWORD -e "use $DB_NAME;" >/dev/null 2>&1
+        if [ $? -ne 0 ]; then
+            mysql -uroot -e "drop user '$DB_USER'@'$DB_HOST';"
+            mysql -uroot -e "grant all on $DB_NAME.* to '$DB_USER'@'$DB_HOST' identified by '$DB_PASSWORD';flush privileges;"
+        fi
     fi
 }
 
