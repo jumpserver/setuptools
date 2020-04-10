@@ -5,6 +5,11 @@ BASE_DIR=$(dirname "$0")
 PROJECT_DIR=$(dirname $(cd $(dirname "$0");pwd))
 source ${PROJECT_DIR}/config.conf
 
+function set_firewall() {
+    firewall-cmd --permanent --add-rich-rule="rule family="ipv4" source address="$Docker_IP" port protocol="tcp" port="8080" accept"
+    firewall-cmd --reload
+}
+
 function download_core() {
     if [ ! -f "$PROJECT_DIR/$Version/jumpserver.tar.gz" ]; then
         wget -qO $PROJECT_DIR/$Version/jumpserver.tar.gz http://demo.jumpserver.org/download/jumpserver/$Version/jumpserver.tar.gz
@@ -99,6 +104,9 @@ function main() {
     fi
     if [ ! -f "/usr/lib/systemd/system/jms_core.service" ]; then
         config_systemd
+    fi
+    if [ ! "$(firewall-cmd --list-all | grep $Docker_IP)" ]; then
+        set_firewall
     fi
     if [ ! "$(systemctl status jms_core | grep Active | grep running)" ]; then
         start_core

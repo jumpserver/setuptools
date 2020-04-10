@@ -14,13 +14,6 @@ function set_firewall() {
         firewall-cmd --zone=public --add-port=$ssh_port/tcp --permanent
         firewall-cmd --reload
     fi
-    if [ ! "$(firewall-cmd --list-all | grep 8080)" ]; then
-        if [ ! "$Docker_IP" ]; then
-            Docker_IP="172.17.0.1/16"
-        fi
-        firewall-cmd --permanent --add-rich-rule="rule family="ipv4" source address="$Docker_IP" port protocol="tcp" port="8080" accept"
-        firewall-cmd --reload
-    fi
 }
 
 function set_selinux() {
