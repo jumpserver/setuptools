@@ -15,18 +15,19 @@ function start_redis {
     systemctl enable redis
 }
 
-function config_passwd() {
-    REDIS_PASSWORD=`cat /dev/urandom | tr -dc A-Za-z0-9 | head -c 24`
-    sed -i "0,/REDIS_PASSWORD=/s//REDIS_PASSWORD=$REDIS_PASSWORD/" $PROJECT_DIR/config.conf
-}
-
 function config_redis() {
-    if [ ! "$(cat /etc/redis.conf | grep -v ^\# | grep requirepass | awk '{print $2}')" ]; then
+    if [ ! "$(cat /etc/redis.conf | grep -v ^\# | grep requirepass)" ]; then
         sed -i "481i requirepass $REDIS_PASSWORD" /etc/redis.conf
     else
         sed -i "s/requirepass .*/requirepass $REDIS_PASSWORD/g" /etc/redis.conf
     fi
     systemctl restart redis
+}
+
+function config_passwd() {
+    REDIS_PASSWORD=`cat /dev/urandom | tr -dc A-Za-z0-9 | head -c 24`
+    sed -i "0,/REDIS_PASSWORD=/s//REDIS_PASSWORD=$REDIS_PASSWORD/" $PROJECT_DIR/config.conf
+    config_redis
 }
 
 function main {
@@ -35,6 +36,8 @@ function main {
     fi
     if [ ! "$REDIS_PASSWORD" ]; then
         config_passwd
+    else
+        config_redis
     fi
     if [ ! "$(systemctl status redis | grep Active | grep running)" ]; then
         start_redis
