@@ -16,7 +16,7 @@ function start_mariadb() {
 }
 
 function config_database() {
-    mysql -uroot -e "create database $DB_NAME default charset 'utf8';"
+    mysql -uroot -e "create database $DB_NAME default charset 'utf8' collate 'utf8_bin';"
 }
 
 function config_user() {
