@@ -38,7 +38,7 @@ fi
 
 cd $install_dir/jumpserver
 git pull || {
-    echo "\033[31m 获取 jumpserver 仓库更新失败, 请检查网络是否正常或尝试重新执行升级脚本 \033[0m"
+    echo -e "\033[31m 获取 jumpserver 仓库更新失败, 请检查网络是否正常或尝试重新执行升级脚本 \033[0m"
     exit 1
 }
 
