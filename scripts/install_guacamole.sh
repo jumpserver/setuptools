@@ -6,8 +6,8 @@ PROJECT_DIR=$(dirname $(cd $(dirname "$0");pwd))
 source ${PROJECT_DIR}/config.conf
 
 function remove_guacamole() {
-    docker stop jms_guacamole
-    docker rm jms_guacamole
+    docker stop jms_guacamole >/dev/null 2>&1
+    docker rm jms_guacamole >/dev/null 2>&1
 }
 
 function start_guacamole() {

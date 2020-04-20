@@ -8,6 +8,8 @@ source ${PROJECT_DIR}/config.conf
 function install_redis() {
     echo ">> Install redis"
     yum install -y redis
+    sed -i "s/bind 127.0.0.1/bind 0.0.0.0/g" /etc/redis.conf
+    sed -i "561i maxmemory-policy allkeys-lru" /etc/redis.conf
 }
 
 function start_redis {
@@ -16,6 +18,9 @@ function start_redis {
 }
 
 function config_redis() {
+    if [ $REDIS_PORT != 6379 ]; then
+        sed -i "s/port 6379/port $REDIS_PORT/g" /etc/redis.conf
+    fi
     if [ ! "$(cat /etc/redis.conf | grep -v ^\# | grep requirepass)" ]; then
         sed -i "481i requirepass $REDIS_PASSWORD" /etc/redis.conf
     else

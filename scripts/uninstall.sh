@@ -54,11 +54,10 @@ if [ "$(systemctl status firewalld | grep Active | grep running)" ]; then
         firewall-cmd --reload
     fi
     if [ "$(firewall-cmd --list-all | grep 8080)" ]; then
-        if [ ! "$Docker_IP" ]; then
-            Docker_IP="172.17.0.1/16"
+        if [ "$Docker_IP" ]; then
+            firewall-cmd --permanent --remove-rich-rule="rule family="ipv4" source address="$Docker_IP" port protocol="tcp" port="8080" accept"
+            firewall-cmd --reload
         fi
-        firewall-cmd --permanent --remove-rich-rule="rule family="ipv4" source address="$Docker_IP" port protocol="tcp" port="8080" accept"
-        firewall-cmd --reload
     fi
 fi
 

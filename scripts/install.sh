@@ -63,6 +63,9 @@ function main() {
     bash $BASE_DIR/install_koko.sh
     bash $BASE_DIR/install_guacamole.sh
     bash $BASE_DIR/install_status.sh
+    if [[ $? != 0 ]]; then
+        exit 1
+    fi
     success
 }
 

@@ -6,8 +6,8 @@ PROJECT_DIR=$(dirname $(cd $(dirname "$0");pwd))
 source ${PROJECT_DIR}/config.conf
 
 function remove_koko() {
-    docker stop jms_koko
-    docker rm jms_koko
+    docker stop jms_koko >/dev/null 2>&1
+    docker rm jms_koko >/dev/null 2>&1
 }
 
 function start_koko() {
