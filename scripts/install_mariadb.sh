@@ -16,11 +16,11 @@ function start_mariadb() {
 }
 
 function config_database() {
-    mysql -uroot -e "create database $DB_NAME default charset 'utf8' collate 'utf8_bin';" >/dev/null 2>&1
+    mysql -uroot -e "create database $DB_NAME default charset 'utf8' collate 'utf8_bin';"
 }
 
 function config_user() {
-    mysql -uroot -e "drop user '$DB_USER'@'$DB_HOST';"
+    mysql -uroot -e "drop user '$DB_USER'@'$DB_HOST';" >/dev/null 2>&1
     mysql -uroot -e "grant all on $DB_NAME.* to '$DB_USER'@'$DB_HOST' identified by '$DB_PASSWORD';flush privileges;"
 }
 
