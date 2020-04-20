@@ -13,7 +13,6 @@ function check_mysql() {
     if [ $? -ne 0 ]; then
         echo -e "[\033[31m ERROR \033[0m]"
         flag=1
-        return ${flag}
     else
         echo -e "[\033[32m OK \033[0m]"
     fi
@@ -29,7 +28,6 @@ function check_redis() {
     if [ $? -ne 0 ]; then
         echo -e "[\033[31m ERROR \033[0m]"
         flag=1
-        return ${flag}
     else
         echo -e "[\033[32m OK \033[0m]"
     fi
@@ -40,12 +38,10 @@ function check_py3() {
     if [ ! -d "$install_dir/py3" ]; then
         echo -e "[\033[31m ERROR \033[0m]"
         flag=1
-        return ${flag}
     else
         if [ -f "$PROJECT_DIR/$Version/core_flag" ]; then
             echo -e "[\033[31m ERROR \033[0m]"
             flag=1
-            return ${flag}
         fi
         echo -e "[\033[32m OK \033[0m]"
     fi
@@ -56,7 +52,6 @@ function check_core() {
     if [ ! "$(systemctl status jms_core | grep Active | grep running)" ]; then
         echo -e "[\033[31m ERROR \033[0m]"
         flag=1
-        return ${flag}
     else
         echo -e "[\033[32m OK \033[0m]"
     fi
@@ -67,7 +62,6 @@ function check_nginx() {
     if [ ! "$(systemctl status nginx | grep Active | grep running)" ]; then
         echo -e "[\033[31m ERROR \033[0m]"
         flag=1
-        return ${flag}
     else
         echo -e "[\033[32m OK \033[0m]"
     fi
