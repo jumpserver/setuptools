@@ -3,7 +3,7 @@
 
 flag=0
 
-echo -ne "User   Check \t\t........................ "
+echo -ne "User   Check \t........................ "
 isRoot=`id -u -n | grep root | wc -l`
 if [ "x$isRoot" == "x1" ];then
   echo -e "[\033[32m OK \033[0m]"
@@ -13,7 +13,7 @@ else
 fi
 
 #操作系统检测
-echo -ne "OS     Check \t\t........................ "
+echo -ne "OS     Check \t........................ "
 if [ -f /etc/redhat-release ];then
   osVersion=`cat /etc/redhat-release | grep -oE '[0-9]+\.[0-9]+'`
   majorVersion=`echo $osVersion | awk -F. '{print $1}'`
@@ -40,7 +40,7 @@ else
 fi
 
 #CPU检测
-echo -ne "CPU    Check \t\t........................ "
+echo -ne "CPU    Check \t........................ "
 processor=`cat /proc/cpuinfo| grep "processor"| wc -l`
 if [ $processor -lt 2 ];then
   echo -e "[\033[31m ERROR \033[0m] CPU 小于 2核，JumpServer 所在机器的 CPU 需要至少 2核"
@@ -50,7 +50,7 @@ else
 fi
 
 #内存检测
-echo -ne "Memory Check \t\t........................ "
+echo -ne "Memory Check \t........................ "
 memTotal=`cat /proc/meminfo | grep MemTotal | awk '{print $2}'`
 if [ $memTotal -lt 3750000 ];then
   echo -e "[\033[31m ERROR \033[0m] 内存小于 4G，JumpServer 所在机器的内存需要至少 4G"

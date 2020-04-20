@@ -8,7 +8,7 @@ source ${PROJECT_DIR}/config.conf
 flag=0
 
 function check_mysql() {
-    echo -ne "MySQL Server  Check \t........................ "
+    echo -ne "MySQL  Check \t........................ "
     mysql -h$DB_HOST -P$DB_PORT -u$DB_USER -p$DB_PASSWORD -e "use $DB_NAME;" >/dev/null 2>&1
     if [ $? -ne 0 ]; then
         echo -e "[\033[31m ERROR \033[0m]"
@@ -20,7 +20,7 @@ function check_mysql() {
 }
 
 function check_redis() {
-    echo -ne "Redis Server  Check \t........................ "
+    echo -ne "Redis  Check \t........................ "
     if [ ! "$REDIS_PASSWORD" ]; then
         redis-cli -h $REDIS_HOST -p $REDIS_PORT info >/dev/null 2>&1
     else
@@ -36,7 +36,7 @@ function check_redis() {
 }
 
 function check_py3() {
-    echo -ne "Python3 venv  Check \t........................ "
+    echo -ne "Py3    Check \t........................ "
     if [ ! -d "$install_dir/py3" ]; then
         echo -e "[\033[31m ERROR \033[0m]"
         flag=1
@@ -52,7 +52,7 @@ function check_py3() {
 }
 
 function check_core() {
-    echo -ne "Jms_core      Check \t........................ "
+    echo -ne "Core   Check \t........................ "
     if [ ! "$(systemctl status jms_core | grep Active | grep running)" ]; then
         echo -e "[\033[31m ERROR \033[0m]"
         flag=1
@@ -62,18 +62,8 @@ function check_core() {
     fi
 }
 
-function check_gunicorn() {
-    echo -ne "Gunicorn Port Check \t........................ "
-    if [ "$(curl -I -m 10 -o /dev/null -s -w %{http_code} http://127.0.0.1:8080)" != "302" ]; then
-        echo -e "[\033[31m ERROR \033[0m]"
-        flag=2
-    else
-        echo -e "[\033[32m OK \033[0m]"
-    fi
-}
-
 function check_nginx() {
-    echo -ne "Nginx Server  Check \t........................ "
+    echo -ne "Ninx   Check \t........................ "
     if [ ! "$(systemctl status nginx | grep Active | grep running)" ]; then
         echo -e "[\033[31m ERROR \033[0m]"
         flag=1
@@ -83,35 +73,59 @@ function check_nginx() {
     fi
 }
 
-function check_web() {
-    echo -ne "Nginx Port    Check \t........................ "
-    if [ "$(curl -I -m 10 -o /dev/null -s -w %{http_code} http://127.0.0.1:$http_port)" == "302" ]; then
-        echo -e "[\033[32m OK \033[0m]"
-        flag=2
-    elif [ "$(curl -I -m 10 -o /dev/null -s -w %{http_code} http://127.0.0.1:$http_port)" == "301" ]; then
-        echo -e "[\033[33m WARN \033[0m]"
-    else
-        echo -e "[\033[31m ERROR \033[0m]"
-    fi
-}
-
 function check_koko() {
-    echo -ne "Jms_koko      Check \t........................ "
+    echo -ne "Koko   Check \t........................ "
     if [ ! "$(docker ps | grep jms_koko)" ]; then
         echo -e "[\033[31m ERROR \033[0m]"
-        flag=2
     else
         echo -e "[\033[32m OK \033[0m]"
     fi
 }
 
 function check_guacamole() {
-    echo -ne "Jms_guacamole Check \t........................ "
+    echo -ne "Guaca. Check \t........................ "
     if [ ! "$(docker ps | grep jms_guacamole)" ]; then
         echo -e "[\033[31m ERROR \033[0m]"
-        flag=2
     else
         echo -e "[\033[32m OK \033[0m]"
+    fi
+}
+
+function check_8080() {
+    echo -ne "8080   Check \t........................ "
+    if [ "$(curl -I -m 10 -o /dev/null -s -w %{http_code} http://127.0.0.1:8080)" != "302" ]; then
+        echo -e "[\033[31m ERROR \033[0m]"
+    else
+        echo -e "[\033[32m OK \033[0m]"
+    fi
+}
+
+function check_5000() {
+    echo -ne "5000   Check \t........................ "
+    if [ "$(curl -I -m 10 -o /dev/null -s -w %{http_code} http://127.0.0.1:5000)" != "404" ]; then
+        echo -e "[\033[31m ERROR \033[0m]"
+    else
+        echo -e "[\033[32m OK \033[0m]"
+    fi
+}
+
+function check_8081() {
+    echo -ne "8081   Check \t........................ "
+    if [ "$(curl -I -m 10 -o /dev/null -s -w %{http_code} http://127.0.0.1:5000)" != "404" ]; then
+        echo -e "[\033[31m ERROR \033[0m]"
+    else
+        echo -e "[\033[32m OK \033[0m]"
+    fi
+}
+
+function check_80() {
+    echo -ne "80     Check \t........................ "
+    if [ "$(curl -I -m 10 -o /dev/null -s -w %{http_code} http://127.0.0.1:$http_port)" == "302" ]; then
+        echo -e "[\033[32m OK \033[0m]"
+    elif [ "$(curl -I -m 10 -o /dev/null -s -w %{http_code} http://127.0.0.1:$http_port)" == "301" ]; then
+        echo -e "[\033[33m WARN \033[0m]"
+    else
+        echo -e "[\033[31m ERROR \033[0m]"
     fi
 }
 
@@ -121,18 +135,17 @@ function main() {
     check_nginx
     check_py3
     check_core
-    check_gunicorn
     check_koko
     check_guacamole
-    check_web
+    check_8080
+    check_5000
+    check_8081
+    check_80
 
     if [ $flag -eq 1 ]; then
       echo -e "[\033[31m ERROR \033[0m] 部分组件安装失败，请查阅上述检测结果"
-      echo -e "[ Tip ] 你可以执行 uninstall 卸载后根据提示重新开始部署 \n"
+      echo -e "[ Tip ] 你可以尝试重新执行 ./jmsctl.sh install 来继续尝试 \n"
       exit 1
-    elif [ $flag -eq 2 ]; then
-      echo -e "[\033[33m WARN \033[0m] 部分组件安装失败, 但是核心功能已经安装成功"
-      echo -e "[ Tip ] 你可以在稍后重新执行 install 命令来安装部署失败的组件 \n"
     fi
 }
 

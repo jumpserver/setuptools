@@ -13,6 +13,7 @@ function remove_guacamole() {
 function start_guacamole() {
     echo ">> Install Jms_guacamole"
     docker run --name jms_guacamole -d -p 127.0.0.1:8081:8080 -e JUMPSERVER_SERVER=http://$Server_IP:8080 -e BOOTSTRAP_TOKEN=$BOOTSTRAP_TOKEN --restart=always jumpserver/jms_guacamole:$Version
+    sleep 5s
 }
 
 function check_guacamole() {
