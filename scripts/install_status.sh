@@ -85,44 +85,6 @@ function check_guacamole() {
     fi
 }
 
-function check_8080() {
-    echo -ne "8080   Check \t........................ "
-    if [ "$(curl -I -m 10 -o /dev/null -s -w %{http_code} http://127.0.0.1:8080)" != "302" ]; then
-        echo -e "[\033[31m ERROR \033[0m]"
-    else
-        echo -e "[\033[32m OK \033[0m]"
-    fi
-}
-
-function check_5000() {
-    echo -ne "5000   Check \t........................ "
-    if [ "$(curl -I -m 10 -o /dev/null -s -w %{http_code} http://127.0.0.1:5000)" != "404" ]; then
-        echo -e "[\033[31m ERROR \033[0m]"
-    else
-        echo -e "[\033[32m OK \033[0m]"
-    fi
-}
-
-function check_8081() {
-    echo -ne "8081   Check \t........................ "
-    if [ "$(curl -I -m 10 -o /dev/null -s -w %{http_code} http://127.0.0.1:5000)" != "404" ]; then
-        echo -e "[\033[31m ERROR \033[0m]"
-    else
-        echo -e "[\033[32m OK \033[0m]"
-    fi
-}
-
-function check_80() {
-    echo -ne "80     Check \t........................ "
-    if [ "$(curl -I -m 10 -o /dev/null -s -w %{http_code} http://127.0.0.1:$http_port)" == "302" ]; then
-        echo -e "[\033[32m OK \033[0m]"
-    elif [ "$(curl -I -m 10 -o /dev/null -s -w %{http_code} http://127.0.0.1:$http_port)" == "301" ]; then
-        echo -e "[\033[33m WARN \033[0m]"
-    else
-        echo -e "[\033[31m ERROR \033[0m]"
-    fi
-}
-
 function main() {
     check_mysql
     check_redis
@@ -131,10 +93,6 @@ function main() {
     check_core
     check_koko
     check_guacamole
-    check_8080
-    check_5000
-    check_8081
-    check_80
 
     if [ $flag -eq 1 ]; then
       echo -e "[\033[31m ERROR \033[0m] 部分组件安装失败，请查阅上述检测结果"
