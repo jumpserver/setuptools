@@ -1,5 +1,4 @@
-# jms_install
-Jumpserver 安装脚本
+# Jumpserver 安装脚本
 
 官方安装文档 http://docs.jumpserver.org
 
