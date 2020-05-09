@@ -65,6 +65,12 @@ if [ "$(getenforce)" != "Disabled" ]; then
     if [ "$http_port" != "80" ]; then
         semanage port -d -t http_port_t -p tcp $http_port || true
     fi
+    if [ "$(semanage fcontext -l | grep $install_dir/luna)" ]; then
+        semanage fcontext -d -t httpd_sys_content_t "$install_dir/luna(/.*)?"
+    fi
+    if [ "$(semanage fcontext -l | grep $install_dir/jumpserver/data)" ]; then
+        semanage fcontext -d -t httpd_sys_content_t "$install_dir/jumpserver/data(/.*)?"
+    fi
 fi
 
 echo -e "\033[31m 已经成功清理 jumpserver 相关文件 \033[0m"
