@@ -43,6 +43,10 @@ function prepare_install() {
         mkdir -p $PROJECT_DIR/$Version
         yum update -y
     fi
+    if [ ! -d "$install_dir" ]; then
+        echo "[ERROR] 安装目录 $install_dir 不存在"
+        exit 1
+    fi
 }
 
 function main() {

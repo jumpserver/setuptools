@@ -23,6 +23,9 @@ function download_luna() {
         rm -rf $install_dir/luna
         echo "[ERROR] 下载 luna 失败"
     }
+    if [ "$(getenforce)" != "Disabled" ]; then
+        restorecon -R $install_dir/luna/
+    fi
 }
 
 function start_nginx() {
