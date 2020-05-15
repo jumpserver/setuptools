@@ -14,7 +14,7 @@ Use:
 cd /opt
 yum -y install wget git
 git clone --depth=1 https://github.com/jumpserver/setuptools.git
-cd jms_install
+cd setuptools
 cp config_example.conf config.conf
 vi config.conf
 ./jmsctl.sh -h
