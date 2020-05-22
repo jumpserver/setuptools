@@ -11,7 +11,7 @@ function prepare_set() {
 
 function install_nginx() {
     echo ">> Install Nginx"
-    yum localinstall -y $BASE_DIR/nginx/nginx-1.16.1-1.el7.ngx.x86_64.rpm
+    yum localinstall -y $BASE_DIR/nginx/nginx-1.18.0-1.el7.ngx.x86_64.rpm
 }
 
 function download_luna() {
@@ -23,6 +23,9 @@ function download_luna() {
         rm -rf $install_dir/luna
         echo "[ERROR] 下载 luna 失败"
     }
+    if [ "$(getenforce)" != "Disabled" ]; then
+        restorecon -R $install_dir/luna/
+    fi
 }
 
 function start_nginx() {
@@ -39,6 +42,7 @@ function config_nginx() {
     if [ $install_dir != "/opt" ]; then
         sed -i "s@/opt@$install_dir@g" /etc/nginx/conf.d/jumpserver.conf
     fi
+    sed -i "s@worker_processes  1;@worker_processes  auto;@g" /etc/nginx/nginx.conf
 }
 
 function main {
