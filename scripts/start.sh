@@ -27,6 +27,7 @@ if [ ! "$(systemctl status docker | grep Active | grep running)" ]; then
 fi
 
 if [ ! "$(docker ps | grep jms_koko)" ]; then
+    systemctl restart docker
     docker start jms_koko
 fi
 if [ ! "$(docker ps | grep jms_guacamole)" ]; then
