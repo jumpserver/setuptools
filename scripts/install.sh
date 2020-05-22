@@ -10,7 +10,7 @@ function success() {
     echo -e "\033[31m http://$Server_IP:$http_port \033[0m"
     echo -e "\033[32m username: admin \033[0m"
     echo -e "\033[32m password: admin \033[0m"
-    echo -e "\033[33m [请在防火墙和安全组放行 $http_port 和 $ssh_port 端口] \033[0m"
+    echo -e "\033[33m [如果你是云服务器请在安全组放行 $http_port 和 $ssh_port 端口] \033[0m"
 }
 
 function prepare_install() {
