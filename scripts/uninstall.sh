@@ -24,6 +24,7 @@ if [ "$(systemctl status jms_core | grep Active | grep running)" ]; then
 fi
 rm -rf /usr/lib/systemd/system/jms_core.service
 rm -rf $install_dir/py3
+rm -rf $install_dir/lina
 rm -rf $install_dir/luna
 rm -rf $install_dir/jumpserver
 
@@ -64,6 +65,9 @@ fi
 if [ "$(getenforce)" != "Disabled" ]; then
     if [ "$http_port" != "80" ]; then
         semanage port -d -t http_port_t -p tcp $http_port || true
+    fi
+    if [ "$(semanage fcontext -l | grep $install_dir/lina)" ]; then
+        semanage fcontext -d -t httpd_sys_content_t "$install_dir/lina(/.*)?"
     fi
     if [ "$(semanage fcontext -l | grep $install_dir/luna)" ]; then
         semanage fcontext -d -t httpd_sys_content_t "$install_dir/luna(/.*)?"
