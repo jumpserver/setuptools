@@ -24,6 +24,9 @@ function set_selinux() {
     if [ "$http_port" != "80" ]; then
         semanage port -m -t http_port_t -p tcp $http_port || true
     fi
+    if [ ! "$(semanage fcontext -l | grep $install_dir/lina)" ]; then
+        semanage fcontext -a -t httpd_sys_content_t "$install_dir/lina(/.*)?"
+    fi
     if [ ! "$(semanage fcontext -l | grep $install_dir/luna)" ]; then
         semanage fcontext -a -t httpd_sys_content_t "$install_dir/luna(/.*)?"
     fi

@@ -19,6 +19,7 @@ function download_core() {
         rm -rf $install_dir/jumpserver
         echo "[ERROR] 下载 jumpserver 失败"
     }
+    mv $install_dir/jumpserver-$Version $install_dir/jumpserver
     if [ "$(getenforce)" != "Disabled" ]; then
         restorecon -R $install_dir/jumpserver/data/
     fi

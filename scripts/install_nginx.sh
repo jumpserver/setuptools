@@ -14,6 +14,20 @@ function install_nginx() {
     yum localinstall -y $BASE_DIR/nginx/nginx-1.18.0-1.el7.ngx.x86_64.rpm
 }
 
+function download_lina() {
+    if [ ! -f "$PROJECT_DIR/$Version/lina.tar.gz" ]; then
+        wget -qO $PROJECT_DIR/$Version/lina.tar.gz http://demo.jumpserver.org/download/lina/$Version/lina.tar.gz
+    fi
+    tar xf $PROJECT_DIR/$Version/lina.tar.gz -C $install_dir/ || {
+        rm -rf $PROJECT_DIR/$Version/lina.tar.gz
+        rm -rf $install_dir/lina
+        echo "[ERROR] 下载 lina 失败"
+    }
+    if [ "$(getenforce)" != "Disabled" ]; then
+        restorecon -R $install_dir/lina/
+    fi
+}
+
 function download_luna() {
     if [ ! -f "$PROJECT_DIR/$Version/luna.tar.gz" ]; then
         wget -qO $PROJECT_DIR/$Version/luna.tar.gz http://demo.jumpserver.org/download/luna/$Version/luna.tar.gz
@@ -25,6 +39,7 @@ function download_luna() {
     }
     if [ "$(getenforce)" != "Disabled" ]; then
         restorecon -R $install_dir/luna/
+        restorecon -R $install_dir/lina/
     fi
 }
 
@@ -35,7 +50,10 @@ function start_nginx() {
 
 function config_nginx() {
     echo > /etc/nginx/conf.d/default.conf
-    cp $BASE_DIR/nginx/jumpserver.conf /etc/nginx/conf.d/jumpserver.conf
+    wget -O /etc/nginx/conf.d/jumpserver.conf http://demo.jumpserver.org/download/nginx/conf.d/$Version/jumpserver.conf || {
+        rm -rf /etc/nginx/conf.d/jumpserver.conf
+        cp $BASE_DIR/nginx/jumpserver.conf /etc/nginx/conf.d/jumpserver.conf
+    }
     if [ "$http_port" != "80" ]; then
         sed -i "s@listen 80;@listen $http_port;@g" /etc/nginx/conf.d/jumpserver.conf
     fi
@@ -58,6 +76,9 @@ function main {
     fi
     if [ ! "$(systemctl status nginx | grep Active | grep running)" ]; then
         start_nginx
+    fi
+    if [ ! -d "$install_dir/lina" ]; then
+        download_lina
     fi
     if [ ! -d "$install_dir/luna" ]; then
         download_luna
