@@ -91,6 +91,23 @@ if [ ! -f "$PROJECT_DIR/$Upgrade_Version/luna.tar.gz" ]; then
 fi
 tar -xf $PROJECT_DIR/$Upgrade_Version/luna.tar.gz -C $install_dir
 
+if [ "${Version:0:1}" == "1" ]; then
+    rm -rf /etc/nginx/conf.d/jumpserver.conf
+    wget -O /etc/nginx/conf.d/jumpserver.conf http://demo.jumpserver.org/download/nginx/conf.d/$Upgrade_Version/jumpserver.conf
+    if [ "$http_port" != "80" ]; then
+        sed -i "s@listen 80;@listen $http_port;@g" /etc/nginx/conf.d/jumpserver.conf
+    fi
+    if [ $install_dir != "/opt" ]; then
+        sed -i "s@/opt@$install_dir@g" /etc/nginx/conf.d/jumpserver.conf
+    fi
+    sed -i "s@worker_processes  1;@worker_processes  auto;@g" /etc/nginx/nginx.conf
+    if [ "$(getenforce)" != "Disabled" ]; then
+        restorecon -R $install_dir/lina/
+    fi
+    nginx -s reload
+    systemctl restart nginx
+fi
+
 docker run --name jms_koko -d -p $ssh_port:2222 -p 127.0.0.1:5000:5000 -e CORE_HOST=http://$Server_IP:8080 -e BOOTSTRAP_TOKEN=$BOOTSTRAP_TOKEN --restart=always jumpserver/jms_koko:$Upgrade_Version || {
     echo "\033[31m jms_koko 镜像下载失败, 请检查网络是否正常或者手动 pull 镜像 \033[0m"
     exit 1

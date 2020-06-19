@@ -77,11 +77,17 @@ function main {
     if [ ! "$(systemctl status nginx | grep Active | grep running)" ]; then
         start_nginx
     fi
-    if [ ! -d "$install_dir/lina" ]; then
-        download_lina
-    fi
-    if [ ! -d "$install_dir/luna" ]; then
-        download_luna
+    if [ "${Version:0:1}" == "1" ]; then
+        if [ ! -d "$install_dir/luna" ]; then
+            download_luna
+        fi
+    elif [ "${Version:0:1}" == "2" ]; then
+        if [ ! -d "$install_dir/lina" ]; then
+            download_lina
+        fi
+        if [ ! -d "$install_dir/luna" ]; then
+            download_luna
+        fi
     fi
 }
 
