@@ -5,6 +5,10 @@ BASE_DIR=$(dirname "$0")
 PROJECT_DIR=$(dirname $(cd $(dirname "$0");pwd))
 source ${PROJECT_DIR}/config.conf
 
+if [ -f "$PROJECT_DIR/$Version/koko.tar" ]; then
+    docker load < $PROJECT_DIR/$Version/koko.tar
+fi
+
 function remove_koko() {
     docker stop jms_koko >/dev/null 2>&1
     docker rm jms_koko >/dev/null 2>&1

@@ -93,7 +93,13 @@ tar -xf $PROJECT_DIR/$Upgrade_Version/luna.tar.gz -C $install_dir
 
 if [ "${Version:0:1}" == "1" ]; then
     rm -rf /etc/nginx/conf.d/jumpserver.conf
-    wget -O /etc/nginx/conf.d/jumpserver.conf http://demo.jumpserver.org/download/nginx/conf.d/$Upgrade_Version/jumpserver.conf
+    if [ ! -f "$PROJECT_DIR/$Upgrade_Version/jumpserver.conf" ]; then
+        wget -qO $PROJECT_DIR/$Upgrade_Version/jumpserver.conf http://demo.jumpserver.org/download/nginx/conf.d/$Upgrade_Version/jumpserver.conf || {
+            rm -rf $PROJECT_DIR/$Upgrade_Version/jumpserver.conf
+            echo "[ERROR] 下载 nginx 配置文件失败"
+        }
+    fi
+    cp $PROJECT_DIR/$Upgrade_Version/jumpserver.conf /etc/nginx/conf.d/jumpserver.conf
     if [ "$http_port" != "80" ]; then
         sed -i "s@listen 80;@listen $http_port;@g" /etc/nginx/conf.d/jumpserver.conf
     fi
@@ -102,10 +108,21 @@ if [ "${Version:0:1}" == "1" ]; then
     fi
     sed -i "s@worker_processes  1;@worker_processes  auto;@g" /etc/nginx/nginx.conf
     if [ "$(getenforce)" != "Disabled" ]; then
-        restorecon -R $install_dir/lina/
+      if [ ! "$(semanage fcontext -l | grep $install_dir/lina)" ]; then
+          semanage fcontext -a -t httpd_sys_content_t "$install_dir/lina(/.*)?"
+          restorecon -R $install_dir/lina/
+      fi
     fi
     nginx -s reload
     systemctl restart nginx
+fi
+
+if [ -f "$PROJECT_DIR/$Upgrade_Version/koko.tar" ]; then
+    docker load < $PROJECT_DIR/$Upgrade_Version/koko.tar
+fi
+
+if [ -f "$PROJECT_DIR/$Upgrade_Version/guacamole.tar" ]; then
+    docker load < $PROJECT_DIR/$Upgrade_Version/guacamole.tar
 fi
 
 docker run --name jms_koko -d -p $ssh_port:2222 -p 127.0.0.1:5000:5000 -e CORE_HOST=http://$Server_IP:8080 -e BOOTSTRAP_TOKEN=$BOOTSTRAP_TOKEN --restart=always jumpserver/jms_koko:$Upgrade_Version || {

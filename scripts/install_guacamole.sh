@@ -5,6 +5,10 @@ BASE_DIR=$(dirname "$0")
 PROJECT_DIR=$(dirname $(cd $(dirname "$0");pwd))
 source ${PROJECT_DIR}/config.conf
 
+if [ -f "$PROJECT_DIR/$Version/guacamole.tar" ]; then
+    docker load < $PROJECT_DIR/$Version/guacamole.tar
+fi
+
 function remove_guacamole() {
     docker stop jms_guacamole >/dev/null 2>&1
     docker rm jms_guacamole >/dev/null 2>&1

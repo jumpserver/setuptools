@@ -50,10 +50,13 @@ function start_nginx() {
 
 function config_nginx() {
     echo > /etc/nginx/conf.d/default.conf
-    wget -O /etc/nginx/conf.d/jumpserver.conf http://demo.jumpserver.org/download/nginx/conf.d/$Version/jumpserver.conf || {
-        rm -rf /etc/nginx/conf.d/jumpserver.conf
-        cp $BASE_DIR/nginx/jumpserver.conf /etc/nginx/conf.d/jumpserver.conf
-    }
+    if [ ! -f "$PROJECT_DIR/$Version/jumpserver.conf" ]; then
+        wget -O $PROJECT_DIR/$Version/jumpserver.conf http://demo.jumpserver.org/download/nginx/conf.d/$Version/jumpserver.conf || {
+            rm -rf $PROJECT_DIR/$Version/jumpserver.conf
+            echo "[ERROR] 下载 nginx 配置文件失败"
+        }
+    fi
+    cp $PROJECT_DIR/$Version/jumpserver.conf /etc/nginx/conf.d/jumpserver.conf
     if [ "$http_port" != "80" ]; then
         sed -i "s@listen 80;@listen $http_port;@g" /etc/nginx/conf.d/jumpserver.conf
     fi
