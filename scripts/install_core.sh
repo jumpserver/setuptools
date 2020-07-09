@@ -11,15 +11,15 @@ function set_firewall() {
 }
 
 function download_core() {
-    if [ ! -f "$PROJECT_DIR/$Version/jumpserver.tar.gz" ]; then
-        wget -qO $PROJECT_DIR/$Version/jumpserver.tar.gz http://demo.jumpserver.org/download/jumpserver/$Version/jumpserver.tar.gz
+    if [ ! -f "$PROJECT_DIR/$Version/jumpserver-v$Version.tar.gz" ]; then
+        wget -qO $PROJECT_DIR/$Version/jumpserver-v$Version.tar.gz http://demo.jumpserver.org/download/jumpserver/$Version/jumpserver-v$Version.tar.gz
     fi
-    tar xf $PROJECT_DIR/$Version/jumpserver.tar.gz -C $install_dir/  || {
-        rm -rf $PROJECT_DIR/$Version/jumpserver.tar.gz
+    tar xf $PROJECT_DIR/$Version/jumpserver-v$Version.tar.gz -C $install_dir/  || {
+        rm -rf $PROJECT_DIR/$Version/jumpserver-v$Version.tar.gz
         rm -rf $install_dir/jumpserver
         echo "[ERROR] 下载 jumpserver 失败"
     }
-    mv $install_dir/jumpserver-$Version $install_dir/jumpserver
+    mv $install_dir/jumpserver-v$Version $install_dir/jumpserver
     if [ "$(getenforce)" != "Disabled" ]; then
         restorecon -R $install_dir/jumpserver/data/
     fi
