@@ -15,8 +15,12 @@ function install_nginx() {
 }
 
 function download_lina() {
+    download_url=http://demo.jumpserver.org/download/lina/$Version/lina-v$Version.tar.gz
+    if [[ -n "$LINA_DOWNLOAD_URL" ]];then
+        download_url="${LINA_DOWNLOAD_URL}"
+    fi
     if [ ! -f "$PROJECT_DIR/$Version/lina-v$Version.tar.gz" ]; then
-        wget -qO $PROJECT_DIR/$Version/lina-v$Version.tar.gz http://demo.jumpserver.org/download/lina/$Version/lina-v$Version.tar.gz
+        wget -qO $PROJECT_DIR/$Version/lina-v$Version.tar.gz ${download_url}
     fi
     tar xf $PROJECT_DIR/$Version/lina-v$Version.tar.gz -C $install_dir/ || {
         rm -rf $PROJECT_DIR/$Version/lina-v$Version.tar.gz
@@ -30,8 +34,12 @@ function download_lina() {
 }
 
 function download_luna() {
+    download_url=http://demo.jumpserver.org/download/lina/$Version/lina-v$Version.tar.gz
+    if [[ -n "$LUNA_DOWNLOAD_URL" ]];then
+        download_url="${LUNA_DOWNLOAD_URL}"
+    fi
     if [ ! -f "$PROJECT_DIR/$Version/luna-v$Version.tar.gz" ]; then
-        wget -qO $PROJECT_DIR/$Version/luna-v$Version.tar.gz http://demo.jumpserver.org/download/luna/$Version/luna-v$Version.tar.gz
+        wget -qO $PROJECT_DIR/$Version/luna-v$Version.tar.gz ${download_url}
     fi
     tar xf $PROJECT_DIR/$Version/luna-v$Version.tar.gz -C $install_dir/ || {
         rm -rf $PROJECT_DIR/$Version/luna-v$Version.tar.gz

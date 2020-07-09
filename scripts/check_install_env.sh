@@ -59,7 +59,7 @@ else
   echo -e "[\033[32m OK \033[0m]"
 fi
 
-if [ $flag -eq 1 ]; then
+if [[ $flag -eq 1 && -z $IGNORE_CHECK ]]; then
   echo "安装环境检测未通过，请查阅上述环境检测结果"
   exit 1
 fi

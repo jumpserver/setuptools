@@ -11,8 +11,12 @@ function set_firewall() {
 }
 
 function download_core() {
+    download_url=http://demo.jumpserver.org/download/jumpserver/$Version/jumpserver-v$Version.tar.gz
+    if [[ -n "$CORE_DOWNLOAD_URL" ]];then
+      download_url=${CORE_DOWNLOAD_URL}
+    fi
     if [ ! -f "$PROJECT_DIR/$Version/jumpserver-v$Version.tar.gz" ]; then
-        wget -qO $PROJECT_DIR/$Version/jumpserver-v$Version.tar.gz http://demo.jumpserver.org/download/jumpserver/$Version/jumpserver-v$Version.tar.gz
+        wget -qO $PROJECT_DIR/$Version/jumpserver-v$Version.tar.gz ${download_url}
     fi
     tar xf $PROJECT_DIR/$Version/jumpserver-v$Version.tar.gz -C $install_dir/  || {
         rm -rf $PROJECT_DIR/$Version/jumpserver-v$Version.tar.gz
