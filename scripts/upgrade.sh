@@ -46,6 +46,7 @@ if [ ! -f "$PROJECT_DIR/$Upgrade_Version/lina-v$Upgrade_Version.tar.gz" ]; then
   }
 fi
 tar -xf $PROJECT_DIR/$Upgrade_Version/lina-v$Upgrade_Version.tar.gz -C $install_dir
+mv $install_dir/lina-v$Upgrade_Version $install_dir/lina
 
 rm -rf $install_dir/luna*
 if [ ! -f "$PROJECT_DIR/$Upgrade_Version/luna-v$Upgrade_Version.tar.gz" ]; then
@@ -56,6 +57,7 @@ if [ ! -f "$PROJECT_DIR/$Upgrade_Version/luna-v$Upgrade_Version.tar.gz" ]; then
     }
 fi
 tar -xf $PROJECT_DIR/$Upgrade_Version/luna-v$Upgrade_Version.tar.gz -C $install_dir
+mv $install_dir/luna-v$Upgrade_Version $install_dir/luna
 
 docker stop jms_koko jms_guacamole
 docker rm jms_koko jms_guacamole
