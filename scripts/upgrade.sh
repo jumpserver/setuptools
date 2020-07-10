@@ -73,7 +73,7 @@ fi
 
 if [ ! -d "$install_dir/jumpserver" ]; then
     tar -xf $PROJECT_DIR/$Upgrade_Version/jumpserver-v$Upgrade_Version.tar.gz -C $install_dir
-    mv $install_dir/jumpserver-$Upgrade_Version $install_dir/jumpserver
+    mv $install_dir/jumpserver-v$Upgrade_Version $install_dir/jumpserver
 fi
 
 if [ ! -f "$install_dir/jumpserver/config.yml" ]; then
