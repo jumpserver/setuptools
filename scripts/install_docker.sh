@@ -10,7 +10,7 @@ function prepare_install() {
 function install_docker() {
     echo ">> Install Docker"
     prepare_install
-    yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+    yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
     rpm --import https://mirrors.aliyun.com/docker-ce/linux/centos/gpg
     yum install -y docker-ce
 }
