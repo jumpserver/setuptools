@@ -96,7 +96,7 @@ fi
 if [ "${Version:0:1}" == "1" ]; then
     rm -rf /etc/nginx/conf.d/jumpserver.conf
     if [ ! -f "$PROJECT_DIR/$Upgrade_Version/jumpserver.conf" ]; then
-        wget -qO $PROJECT_DIR/$Upgrade_Version/jumpserver.conf http://demo.jumpserver.org/download/nginx/conf.d/$Upgrade_Version/jumpserver.conf || {
+        wget -qO $PROJECT_DIR/$Upgrade_Version/jumpserver.conf http://demo.jumpserver.org/download/nginx/conf.d/latest/jumpserver.conf || {
             rm -rf $PROJECT_DIR/$Upgrade_Version/jumpserver.conf
             echo "[ERROR] 下载 nginx 配置文件失败"
         }

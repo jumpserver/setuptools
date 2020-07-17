@@ -38,7 +38,6 @@ function prepare_install() {
         echo "[ERROR] python 依赖安装失败"
     else
         rm -rf $PROJECT_DIR/$Version/core_flag
-        deactivate
     fi
 }
 

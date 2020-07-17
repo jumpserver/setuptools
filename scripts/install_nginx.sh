@@ -53,7 +53,7 @@ function start_nginx() {
 function config_nginx() {
     echo > /etc/nginx/conf.d/default.conf
     if [ ! -f "$PROJECT_DIR/$Version/jumpserver.conf" ]; then
-        wget -O $PROJECT_DIR/$Version/jumpserver.conf http://demo.jumpserver.org/download/nginx/conf.d/$Version/jumpserver.conf || {
+        wget -O $PROJECT_DIR/$Version/jumpserver.conf http://demo.jumpserver.org/download/nginx/conf.d/latest/jumpserver.conf || {
             rm -rf $PROJECT_DIR/$Version/jumpserver.conf
             echo "[ERROR] 下载 nginx 配置文件失败"
         }

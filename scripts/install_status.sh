@@ -8,7 +8,7 @@ source ${PROJECT_DIR}/config.conf
 flag=0
 
 function check_mysql() {
-    echo -ne "MySQL  Check \t........................ "
+    echo -ne "MySQL   Check \t........................ "
     mysql -h$DB_HOST -P$DB_PORT -u$DB_USER -p$DB_PASSWORD -e "use $DB_NAME;" >/dev/null 2>&1
     if [ $? -ne 0 ]; then
         echo -e "[\033[31m ERROR \033[0m]"
@@ -19,7 +19,7 @@ function check_mysql() {
 }
 
 function check_redis() {
-    echo -ne "Redis  Check \t........................ "
+    echo -ne "Redis   Check \t........................ "
     if [ ! "$REDIS_PASSWORD" ]; then
         redis-cli -h $REDIS_HOST -p $REDIS_PORT info >/dev/null 2>&1
     else
@@ -34,7 +34,7 @@ function check_redis() {
 }
 
 function check_py3() {
-    echo -ne "Py3    Check \t........................ "
+    echo -ne "Py3     Check \t........................ "
     if [ ! -d "$install_dir/py3" ]; then
         echo -e "[\033[31m ERROR \033[0m]"
         flag=1
@@ -49,7 +49,7 @@ function check_py3() {
 }
 
 function check_core() {
-    echo -ne "Core   Check \t........................ "
+    echo -ne "Core    Check \t........................ "
     if [ ! "$(systemctl status jms_core | grep Active | grep running)" ]; then
         echo -e "[\033[31m ERROR \033[0m]"
         flag=1
@@ -59,7 +59,7 @@ function check_core() {
 }
 
 function check_nginx() {
-    echo -ne "Ninx   Check \t........................ "
+    echo -ne "Ninx    Check \t........................ "
     if [ ! "$(systemctl status nginx | grep Active | grep running)" ]; then
         echo -e "[\033[31m ERROR \033[0m]"
         flag=1
@@ -69,7 +69,7 @@ function check_nginx() {
 }
 
 function check_koko() {
-    echo -ne "Koko   Check \t........................ "
+    echo -ne "Koko    Check \t........................ "
     if [ ! "$(docker ps | grep jms_koko)" ]; then
         echo -e "[\033[31m ERROR \033[0m]"
     else
@@ -78,7 +78,7 @@ function check_koko() {
 }
 
 function check_guacamole() {
-    echo -ne "Guaca. Check \t........................ "
+    echo -ne "Guaca.  Check \t........................ "
     if [ ! "$(docker ps | grep jms_guacamole)" ]; then
         echo -e "[\033[31m ERROR \033[0m]"
     else
