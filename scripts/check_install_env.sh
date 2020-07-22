@@ -61,8 +61,8 @@ else
 fi
 
 echo -ne "Version Check \t........................ "
-if [ "${Version:0:1}" -lt "2" ]; then
-    echo -e "[\033[31m ERROR \033[0m] 请安装 JumpServer 2.0.0 以上版本, 不支持旧版本安装"
+if [ "${Version:1:1}" -lt "2" ]; then
+    echo -e "[\033[31m ERROR \033[0m] 请安装 JumpServer v2.0.0 以上版本, 不支持旧版本安装"
     flag=1
 else
     echo -e "[\033[32m OK \033[0m]"

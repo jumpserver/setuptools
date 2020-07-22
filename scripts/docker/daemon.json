@@ -1,3 +1,3 @@
 {
-    "registry-mirrors": ["https://hub-mirror.c.163.com", "https://bmtrgdvx.mirror.aliyuncs.com", "https://dockerhub.azk8s.cn", "https://hub.wuxiaobai.win"]
+    "registry-mirrors": ["https://bmtrgdvx.mirror.aliyuncs.com", "https://hub-mirror.c.163.com", "https://dockerhub.azk8s.cn", "https://hub.wuxiaobai.win"]
 }
