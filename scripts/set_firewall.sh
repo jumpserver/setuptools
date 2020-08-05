@@ -22,7 +22,9 @@ function set_selinux() {
     fi
     setsebool -P httpd_can_network_connect 1
     if [ "$http_port" != "80" ]; then
-        semanage port -a -t http_port_t -p tcp $http_port || true
+        semanage port -a -t http_port_t -p tcp $http_port || {
+            semanage port -m -t http_port_t -p tcp $http_port || true
+        }
     fi
     if [ ! "$(semanage fcontext -l | grep $install_dir/lina)" ]; then
         semanage fcontext -a -t httpd_sys_content_t "$install_dir/lina(/.*)?"
