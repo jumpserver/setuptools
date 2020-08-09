@@ -80,7 +80,7 @@ fi
 
 if [ ! -f "$install_dir/jumpserver/config.yml" ]; then
     cp $jumpserver_backup/jumpserver/config.yml $install_dir/jumpserver/
-    \cp -rf $jumpserver_backup/jumpserver/data/* $install_dir/jumpserver/data/*
+    \cp -rf $jumpserver_backup/jumpserver/data/* $install_dir/jumpserver/data/
 fi
 
 source $install_dir/py3/bin/activate
