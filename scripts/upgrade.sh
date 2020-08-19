@@ -59,8 +59,22 @@ fi
 tar -xf $PROJECT_DIR/$Upgrade_Version/luna-$Upgrade_Version.tar.gz -C $install_dir
 mv $install_dir/luna-$Upgrade_Version $install_dir/luna
 
-docker stop jms_koko jms_guacamole
-docker rm jms_koko jms_guacamole
+if [ ! "$(docker images | grep jms_koko | grep $Upgrade_Version)" ]; then
+    docker pull jumpserver/jms_koko:$Upgrade_Version || {
+        echo -e "\033[31m 下载 koko 镜像失败, 请检查网络是否正常或尝试重新执行升级脚本 \033[0m"
+        exit 1
+    }
+fi
+
+if [ ! "$(docker images | grep jms_guacamole | grep $Upgrade_Version)" ]; then
+    docker pull jumpserver/jms_guacamole:$Upgrade_Version || {
+        echo -e "\033[31m 下载 guacamole 镜像失败, 请检查网络是否正常或尝试重新执行升级脚本 \033[0m"
+        exit 1
+    }
+fi
+
+docker stop jms_koko jms_guacamole >/dev/null 2>&1
+docker rm jms_koko jms_guacamole >/dev/null 2>&1
 systemctl stop jms_core
 
 if [ ! -d "$jumpserver_backup/jumpserver" ]; then
@@ -137,7 +151,7 @@ docker run --name jms_guacamole -d -p 127.0.0.1:8081:8080 -e JUMPSERVER_SERVER=h
     exit 1
 }
 
-docker rmi jumpserver/jms_koko:$Version jumpserver/jms_guacamole:$Version
+docker rmi jumpserver/jms_koko:$Version jumpserver/jms_guacamole:$Version >/dev/null 2>&1
 
 sed -i "s/Version=$Version/Version=$Upgrade_Version/g" ${PROJECT_DIR}/config.conf
 echo -e "\033[31m >>> 已升级版本至 $Upgrade_Version <<< \033[0m"
