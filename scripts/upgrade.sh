@@ -30,33 +30,40 @@ if [ ! -d "$PROJECT_DIR/$Upgrade_Version" ]; then
 fi
 
 if [ ! -f "$PROJECT_DIR/$Upgrade_Version/jumpserver-$Upgrade_Version.tar.gz" ]; then
-    wget -qO $PROJECT_DIR/$Upgrade_Version/jumpserver-$Upgrade_Version.tar.gz http://demo.jumpserver.org/download/jumpserver/$Upgrade_Version/jumpserver-$Upgrade_Version.tar.gz || {
-        rm -rf $PROJECT_DIR/$Upgrade_Version/jumpserver-$Upgrade_Version.tar.gz
-        echo -e "\033[31m 下载 jumpserver 失败, 请检查网络是否正常或尝试重新执行升级脚本 \033[0m"
-        exit 1
+    wget -qO wget -qO $PROJECT_DIR/$Upgrade_Version/jumpserver-$Upgrade_Version.tar.gz https://github.com/jumpserver/jumpserver/releases/download/$Upgrade_Version/jumpserver-$Upgrade_Version.tar.gz || {
+        rm -f $PROJECT_DIR/$Upgrade_Version/jumpserver-$Upgrade_Version.tar.gz
+        wget -qO $PROJECT_DIR/$Upgrade_Version/jumpserver-$Upgrade_Version.tar.gz http://demo.jumpserver.org/download/jumpserver/$Upgrade_Version/jumpserver-$Upgrade_Version.tar.gz
     }
 fi
 
 rm -rf $install_dir/lina*
 if [ ! -f "$PROJECT_DIR/$Upgrade_Version/lina-$Upgrade_Version.tar.gz" ]; then
-  wget -qO $PROJECT_DIR/$Upgrade_Version/lina-$Upgrade_Version.tar.gz http://demo.jumpserver.org/download/lina/$Upgrade_Version/lina-$Upgrade_Version.tar.gz|| {
-      rm -rf $PROJECT_DIR/$Upgrade_Version/lina-$Upgrade_Version.tar.gz
-      echo -e "\033[31m 下载 lina 失败, 请检查网络是否正常或尝试重新执行升级脚本 \033[0m"
-      exit 1
+    wget -qO $PROJECT_DIR/$Upgrade_Version/lina-$Upgrade_Version.tar.gz https://github.com/jumpserver/lina/releases/download/$Upgrade_Version/lina-$Upgrade_Version.tar.gz || {
+        rm -f $PROJECT_DIR/$Upgrade_Version/lina-$Upgrade_Version.tar.gz
+        wget -qO $PROJECT_DIR/$Upgrade_Version/lina-$Upgrade_Version.tar.gz http://demo.jumpserver.org/download/lina/$Upgrade_Version/lina-$Upgrade_Version.tar.gz
   }
 fi
-tar -xf $PROJECT_DIR/$Upgrade_Version/lina-$Upgrade_Version.tar.gz -C $install_dir
+tar -xf $PROJECT_DIR/$Upgrade_Version/lina-$Upgrade_Version.tar.gz -C $install_dir || {
+    rm -rf $install_dir/lina-$Upgrade_Version
+    rm -f $PROJECT_DIR/$Upgrade_Version/lina-$Upgrade_Version.tar.gz
+    echo "[ERROR] 下载 lina 失败"
+    exit 1
+}
 mv $install_dir/lina-$Upgrade_Version $install_dir/lina
 
 rm -rf $install_dir/luna*
 if [ ! -f "$PROJECT_DIR/$Upgrade_Version/luna-$Upgrade_Version.tar.gz" ]; then
-    wget -qO $PROJECT_DIR/$Upgrade_Version/luna-$Upgrade_Version.tar.gz http://demo.jumpserver.org/download/luna/$Upgrade_Version/luna-$Upgrade_Version.tar.gz|| {
-        rm -rf $PROJECT_DIR/$Upgrade_Version/luna-$Upgrade_Version.tar.gz
-        echo -e "\033[31m 下载 luna 失败, 请检查网络是否正常或尝试重新执行升级脚本 \033[0m"
-        exit 1
+    wget -qO $PROJECT_DIR/$Upgrade_Version/luna-$Upgrade_Version.tar.gz https://github.com/jumpserver/luna/releases/download/$Upgrade_Version/luna-$Upgrade_Version.tar.gz || {
+        rm -f $PROJECT_DIR/$Upgrade_Version/luna-$Upgrade_Version.tar.gz
+        wget -qO $PROJECT_DIR/$Upgrade_Version/luna-$Upgrade_Version.tar.gz http://demo.jumpserver.org/download/luna/$Upgrade_Version/luna-$Upgrade_Version.tar.gz
     }
 fi
-tar -xf $PROJECT_DIR/$Upgrade_Version/luna-$Upgrade_Version.tar.gz -C $install_dir
+tar -xf $PROJECT_DIR/$Upgrade_Version/luna-$Upgrade_Version.tar.gz -C $install_dir || {
+    rm -rf $install_dir/luna-$Upgrade_Version
+    rm -f $PROJECT_DIR/$Upgrade_Version/luna-$Upgrade_Version.tar.gz
+    echo -e "\033[31m 下载 luna 失败, 请检查网络是否正常或尝试重新执行升级脚本 \033[0m"
+    exit 1
+}
 mv $install_dir/luna-$Upgrade_Version $install_dir/luna
 
 if [ ! "$(docker images | grep jms_koko | grep $Upgrade_Version)" ]; then
@@ -88,7 +95,12 @@ if [ ! -f "$jumpserver_backup/$DB_NAME.sql" ]; then
 fi
 
 if [ ! -d "$install_dir/jumpserver" ]; then
-    tar -xf $PROJECT_DIR/$Upgrade_Version/jumpserver-$Upgrade_Version.tar.gz -C $install_dir
+    tar -xf $PROJECT_DIR/$Upgrade_Version/jumpserver-$Upgrade_Version.tar.gz -C $install_dir || {
+        rm -rf $install_dir/jumpserver-$Upgrade_Version
+        rm -f $PROJECT_DIR/$Upgrade_Version/jumpserver-$Upgrade_Version.tar.gz
+        echo -e "\033[31m 下载 jumpserver 失败, 请检查网络是否正常或尝试重新执行升级脚本 \033[0m"
+        exit 1
+    }
     mv $install_dir/jumpserver-$Upgrade_Version $install_dir/jumpserver
 fi
 
@@ -108,10 +120,10 @@ if [ ! "$(systemctl status jms_core | grep Active | grep running)" ]; then
 fi
 
 if [ "${Version:0:1}" == "1" ]; then
-    rm -rf /etc/nginx/conf.d/jumpserver.conf
+    rm -f /etc/nginx/conf.d/jumpserver.conf
     if [ ! -f "$PROJECT_DIR/$Upgrade_Version/jumpserver.conf" ]; then
         wget -qO $PROJECT_DIR/$Upgrade_Version/jumpserver.conf http://demo.jumpserver.org/download/nginx/conf.d/latest/jumpserver.conf || {
-            rm -rf $PROJECT_DIR/$Upgrade_Version/jumpserver.conf
+            rm -f $PROJECT_DIR/$Upgrade_Version/jumpserver.conf
             echo "[ERROR] 下载 nginx 配置文件失败"
         }
     fi
@@ -141,7 +153,7 @@ if [ -f "$PROJECT_DIR/$Upgrade_Version/guacamole.tar" ]; then
     docker load < $PROJECT_DIR/$Upgrade_Version/guacamole.tar
 fi
 
-docker run --name jms_koko -d -p $ssh_port:2222 -p 127.0.0.1:5000:5000 -e CORE_HOST=http://$Server_IP:8080 -e BOOTSTRAP_TOKEN=$BOOTSTRAP_TOKEN --restart=always jumpserver/jms_koko:$Upgrade_Version || {
+docker run --name jms_koko -d -p $ssh_port:2222 -p 127.0.0.1:5000:5000 -e CORE_HOST=http://$Server_IP:8080 -e BOOTSTRAP_TOKEN=$BOOTSTRAP_TOKEN --restart=always --privileged=true jumpserver/jms_koko:$Upgrade_Version || {
     echo -e "\033[31m jms_koko 镜像下载失败, 请检查网络是否正常或者手动 pull 镜像 \033[0m"
     exit 1
 }

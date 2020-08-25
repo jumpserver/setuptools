@@ -16,10 +16,13 @@ function install_nginx() {
 
 function download_lina() {
     if [ ! -f "$PROJECT_DIR/$Version/lina-$Version.tar.gz" ]; then
-        wget -qO $PROJECT_DIR/$Version/lina-$Version.tar.gz http://demo.jumpserver.org/download/lina/$Version/lina-$Version.tar.gz
+        wget -qO $PROJECT_DIR/$Version/lina-$Version.tar.gz https://github.com/jumpserver/lina/releases/download/$Version/lina-$Version.tar.gz || {
+            rm -f $PROJECT_DIR/$Version/lina-$Version.tar.gz
+            wget -qO $PROJECT_DIR/$Version/lina-$Version.tar.gz http://demo.jumpserver.org/download/lina/$Version/lina-$Version.tar.gz
+        }
     fi
     tar xf $PROJECT_DIR/$Version/lina-$Version.tar.gz -C $install_dir/ || {
-        rm -rf $PROJECT_DIR/$Version/lina-$Version.tar.gz
+        rm -f $PROJECT_DIR/$Version/lina-$Version.tar.gz
         rm -rf $install_dir/lina
         echo "[ERROR] 下载 lina 失败"
     }
@@ -31,10 +34,13 @@ function download_lina() {
 
 function download_luna() {
     if [ ! -f "$PROJECT_DIR/$Version/luna-$Version.tar.gz" ]; then
-        wget -qO $PROJECT_DIR/$Version/luna-$Version.tar.gz http://demo.jumpserver.org/download/luna/$Version/luna-$Version.tar.gz
+        wget -qO $PROJECT_DIR/$Version/luna-$Version.tar.gz https://github.com/jumpserver/luna/releases/download/$Version/luna-$Version.tar.gz || {
+            rm -f $PROJECT_DIR/$Version/luna-$Version.tar.gz
+            wget -qO $PROJECT_DIR/$Version/luna-$Version.tar.gz http://demo.jumpserver.org/download/luna/$Version/luna-$Version.tar.gz
+        }
     fi
     tar xf $PROJECT_DIR/$Version/luna-$Version.tar.gz -C $install_dir/ || {
-        rm -rf $PROJECT_DIR/$Version/luna-$Version.tar.gz
+        rm -f $PROJECT_DIR/$Version/luna-$Version.tar.gz
         rm -rf $install_dir/luna
         echo "[ERROR] 下载 luna 失败"
     }

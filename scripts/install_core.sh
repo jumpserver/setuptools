@@ -12,10 +12,13 @@ function set_firewall() {
 
 function download_core() {
     if [ ! -f "$PROJECT_DIR/$Version/jumpserver-$Version.tar.gz" ]; then
-        wget -qO $PROJECT_DIR/$Version/jumpserver-$Version.tar.gz http://demo.jumpserver.org/download/jumpserver/$Version/jumpserver-$Version.tar.gz
+        wget -qO $PROJECT_DIR/$Version/jumpserver-$Version.tar.gz https://github.com/jumpserver/jumpserver/releases/download/$Version/jumpserver-$Version.tar.gz || {
+            rm -f $PROJECT_DIR/$Version/jumpserver-$Version.tar.gz
+            wget -qO $PROJECT_DIR/$Version/jumpserver-$Version.tar.gz http://demo.jumpserver.org/download/jumpserver/$Version/jumpserver-$Version.tar.gz
+        }
     fi
     tar xf $PROJECT_DIR/$Version/jumpserver-$Version.tar.gz -C $install_dir/  || {
-        rm -rf $PROJECT_DIR/$Version/jumpserver-$Version.tar.gz
+        rm -f $PROJECT_DIR/$Version/jumpserver-$Version.tar.gz
         rm -rf $install_dir/jumpserver
         echo "[ERROR] 下载 jumpserver 失败"
     }
@@ -37,7 +40,7 @@ function prepare_install() {
         echo > $PROJECT_DIR/$Version/core_flag
         echo "[ERROR] python 依赖安装失败"
     else
-        rm -rf $PROJECT_DIR/$Version/core_flag
+        rm -f $PROJECT_DIR/$Version/core_flag
     fi
 }
 

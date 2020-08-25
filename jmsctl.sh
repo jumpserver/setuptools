@@ -61,6 +61,8 @@ function main() {
          if [ ! $target ]; then
              echo -e "Usage: jmsctl reset COMMAND\n"
              echo -e "Commands:"
+             echo -e "  all          重置所有组件"
+             echo -e "  core         重置 core"
              echo -e "  koko         重置 koko"
              echo -e "  guacamole    重置 guacamole"
              exit 1

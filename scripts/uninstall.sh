@@ -10,7 +10,7 @@ echo -e "\033[31m 准备从系统中卸载 jumpserver \033[0m"
 if [ "$(systemctl status nginx | grep Active | grep running)" ]; then
     systemctl stop nginx
 fi
-rm -rf /etc/nginx/conf.d/jumpserver.conf
+rm -f /etc/nginx/conf.d/jumpserver.conf
 
 if [ "$(systemctl status docker | grep Active | grep running)" ]; then
     docker stop jms_koko jms_guacamole
@@ -22,7 +22,7 @@ fi
 if [ "$(systemctl status jms_core | grep Active | grep running)" ]; then
     systemctl stop jms_core
 fi
-rm -rf /usr/lib/systemd/system/jms_core.service
+rm -f /usr/lib/systemd/system/jms_core.service
 rm -rf $install_dir/py3
 rm -rf $install_dir/lina
 rm -rf $install_dir/luna
