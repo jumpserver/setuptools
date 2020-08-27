@@ -10,18 +10,8 @@ function set_firewall() {
     firewall-cmd --reload
 }
 
-function download_core() {
-    if [ ! -f "$PROJECT_DIR/$Version/jumpserver-$Version.tar.gz" ]; then
-        wget -qO $PROJECT_DIR/$Version/jumpserver-$Version.tar.gz https://github.com/jumpserver/jumpserver/releases/download/$Version/jumpserver-$Version.tar.gz || {
-            rm -f $PROJECT_DIR/$Version/jumpserver-$Version.tar.gz
-            wget -qO $PROJECT_DIR/$Version/jumpserver-$Version.tar.gz http://demo.jumpserver.org/download/jumpserver/$Version/jumpserver-$Version.tar.gz
-        }
-    fi
-    tar xf $PROJECT_DIR/$Version/jumpserver-$Version.tar.gz -C $install_dir/  || {
-        rm -f $PROJECT_DIR/$Version/jumpserver-$Version.tar.gz
-        rm -rf $install_dir/jumpserver
-        echo "[ERROR] 下载 jumpserver 失败"
-    }
+function dec_core() {
+    tar xf $PROJECT_DIR/$Version/jumpserver-$Version.tar.gz -C $install_dir/
     mv $install_dir/jumpserver-$Version $install_dir/jumpserver
     if [ "$(getenforce)" != "Disabled" ]; then
         restorecon -R $install_dir/jumpserver/data/
@@ -30,7 +20,8 @@ function download_core() {
 
 function prepare_install() {
     yum install -y $(cat $install_dir/jumpserver/requirements/rpm_requirements.txt) || {
-        echo > $PROJECT_DIR/$Version/core_flag
+        echo "[ERROR] rpm 依赖安装失败"
+        exit 1
     }
     source $install_dir/py3/bin/activate
     pip install wheel
@@ -39,8 +30,7 @@ function prepare_install() {
     if [ $? -ne 0 ];then
         echo > $PROJECT_DIR/$Version/core_flag
         echo "[ERROR] python 依赖安装失败"
-    else
-        rm -f $PROJECT_DIR/$Version/core_flag
+        exit 1
     fi
 }
 
@@ -85,17 +75,12 @@ function config_systemd() {
         sed -i "s/redis.service //g" /usr/lib/systemd/system/jms_core.service
     fi
     systemctl daemon-reload
-}
-
-function start_core() {
     systemctl enable jms_core
-    systemctl start jms_core
 }
 
 function install_core() {
     echo ">> Install Jms_core"
-    download_core
-    prepare_install
+    dec_core
 }
 
 function main() {
@@ -105,17 +90,12 @@ function main() {
     if [ ! -f "$install_dir/jumpserver/config.yml" ]; then
         config_core
     fi
-    if [ -f "$PROJECT_DIR/$Version/core_flag" ]; then
-        prepare_install
-    fi
+    prepare_install
     if [ ! -f "/usr/lib/systemd/system/jms_core.service" ]; then
         config_systemd
     fi
     if [ ! "$(firewall-cmd --list-all | grep $Docker_IP)" ]; then
         set_firewall
-    fi
-    if [ ! "$(systemctl status jms_core | grep Active | grep running)" ]; then
-        start_core
     fi
 }
 

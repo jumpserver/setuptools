@@ -14,36 +14,16 @@ function install_nginx() {
     yum localinstall -y $BASE_DIR/nginx/nginx-1.18.0-1.el7.ngx.x86_64.rpm
 }
 
-function download_lina() {
-    if [ ! -f "$PROJECT_DIR/$Version/lina-$Version.tar.gz" ]; then
-        wget -qO $PROJECT_DIR/$Version/lina-$Version.tar.gz https://github.com/jumpserver/lina/releases/download/$Version/lina-$Version.tar.gz || {
-            rm -f $PROJECT_DIR/$Version/lina-$Version.tar.gz
-            wget -qO $PROJECT_DIR/$Version/lina-$Version.tar.gz http://demo.jumpserver.org/download/lina/$Version/lina-$Version.tar.gz
-        }
-    fi
-    tar xf $PROJECT_DIR/$Version/lina-$Version.tar.gz -C $install_dir/ || {
-        rm -f $PROJECT_DIR/$Version/lina-$Version.tar.gz
-        rm -rf $install_dir/lina
-        echo "[ERROR] 下载 lina 失败"
-    }
+function dec_lina() {
+    tar xf $PROJECT_DIR/$Version/lina-$Version.tar.gz -C $install_dir/
     mv $install_dir/lina-$Version $install_dir/lina
     if [ "$(getenforce)" != "Disabled" ]; then
         restorecon -R $install_dir/lina/
     fi
 }
 
-function download_luna() {
-    if [ ! -f "$PROJECT_DIR/$Version/luna-$Version.tar.gz" ]; then
-        wget -qO $PROJECT_DIR/$Version/luna-$Version.tar.gz https://github.com/jumpserver/luna/releases/download/$Version/luna-$Version.tar.gz || {
-            rm -f $PROJECT_DIR/$Version/luna-$Version.tar.gz
-            wget -qO $PROJECT_DIR/$Version/luna-$Version.tar.gz http://demo.jumpserver.org/download/luna/$Version/luna-$Version.tar.gz
-        }
-    fi
-    tar xf $PROJECT_DIR/$Version/luna-$Version.tar.gz -C $install_dir/ || {
-        rm -f $PROJECT_DIR/$Version/luna-$Version.tar.gz
-        rm -rf $install_dir/luna
-        echo "[ERROR] 下载 luna 失败"
-    }
+function dec_luna() {
+    tar xf $PROJECT_DIR/$Version/luna-$Version.tar.gz -C $install_dir/
     mv $install_dir/luna-$Version $install_dir/luna
     if [ "$(getenforce)" != "Disabled" ]; then
         restorecon -R $install_dir/luna/
@@ -79,14 +59,14 @@ function main {
     if [ ! -f /etc/nginx/conf.d/jumpserver.conf ];then
         config_nginx
     fi
-    if [ ! "$(systemctl status nginx | grep Active | grep running)" ]; then
-        start_nginx
-    fi
     if [ ! -d "$install_dir/lina" ]; then
-        download_lina
+        dec_lina
     fi
     if [ ! -d "$install_dir/luna" ]; then
-        download_luna
+        dec_luna
+    fi
+    if [ ! "$(systemctl status nginx | grep Active | grep running)" ]; then
+        start_nginx
     fi
 }
 

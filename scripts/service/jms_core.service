@@ -1,5 +1,5 @@
 [Unit]
-Description=Jumpserver Core Server
+Description=JumpServer Core Server
 Documentation=https://github.com/jumpserver/jumpserver.git
 After=network.target mariadb.service redis.service docker.service
 Wants=mariadb.service redis.service docker.service

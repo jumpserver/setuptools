@@ -1,4 +1,4 @@
-# Jumpserver 安装脚本
+# JumpServer 安装脚本
 
 安装文档 https://docs.jumpserver.org/zh/master/install/setup_by_fast/
 

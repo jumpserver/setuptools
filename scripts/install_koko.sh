@@ -17,15 +17,10 @@ function remove_koko() {
 function start_koko() {
     echo ">> Install Jms_koko"
     docker run --name jms_koko -d -p $ssh_port:2222 -p 127.0.0.1:5000:5000 -e CORE_HOST=http://$Server_IP:8080 -e BOOTSTRAP_TOKEN=$BOOTSTRAP_TOKEN --restart=always --privileged=true jumpserver/jms_koko:$Version
-    sleep 5s
 }
 
 function check_koko() {
-    if [ "$(docker exec jms_koko env | grep BOOTSTRAP_TOKEN | cut -d = -f2)" != "$BOOTSTRAP_TOKEN" ]; then
-        remove_koko
-        start_koko
-    fi
-    if [ ! "$(docker exec jms_koko env | grep $Server_IP )" ]; then
+    if [ ! "$(docker exec jms_koko env | grep BOOTSTRAP_TOKEN=$BOOTSTRAP_TOKEN)" ] && [ ! "$(docker exec jms_koko env | grep CORE_HOST=http://$Server_IP:8080)" ]; then
         remove_koko
         start_koko
     fi

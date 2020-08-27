@@ -96,8 +96,7 @@ function main() {
     check_guacamole
 
     if [ $flag -eq 1 ]; then
-      echo -e "[\033[31m ERROR \033[0m] 部分组件安装失败，请查阅上述检测结果"
-      echo -e "[ Tip ] 你可以尝试重新执行 ./jmsctl.sh install 来继续尝试 \n"
+      echo -e "[\033[31m ERROR \033[0m] 部分组件出现故障，请查阅上述检测结果"
       exit 1
     fi
 }

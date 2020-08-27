@@ -5,12 +5,12 @@ BASE_DIR=$(dirname "$0")
 PROJECT_DIR=$(dirname $(cd $(dirname "$0");pwd))
 source ${PROJECT_DIR}/config.conf
 
-function success() {
-    echo -e "\033[31m Jumpserver 安装成功!\n\n 默认登陆信息: \033[0m"
-    echo -e "\033[31m http://$Server_IP:$http_port \033[0m"
-    echo -e "\033[32m username: admin \033[0m"
-    echo -e "\033[32m password: admin \033[0m"
-    echo -e "\033[33m [如果你是云服务器请在安全组放行 $http_port 和 $ssh_port 端口] \033[0m"
+function message() {
+    echo ""
+    echo -e "JumpServer 部署完成"
+    echo -ne "执行"
+    echo -ne "\033[33m ./jmsctl.sh start \033[0m"
+    echo -e "启动 \n"
 }
 
 function prepare_install() {
@@ -63,16 +63,17 @@ function main() {
     if [ $REDIS_HOST == 127.0.0.1 ]; then
         bash $BASE_DIR/install_redis.sh
     fi
-    bash $BASE_DIR/install_nginx.sh
     bash $BASE_DIR/install_py3.sh
-    bash $BASE_DIR/install_core.sh
-    bash $BASE_DIR/install_koko.sh
-    bash $BASE_DIR/install_guacamole.sh
-    bash $BASE_DIR/install_status.sh
+    bash $BASE_DIR/download.sh
     if [[ $? != 0 ]]; then
         exit 1
     fi
-    success
+    bash $BASE_DIR/install_core.sh
+    if [[ $? != 0 ]]; then
+        exit 1
+    fi
+    bash $BASE_DIR/install_nginx.sh
+    message
 }
 
 main

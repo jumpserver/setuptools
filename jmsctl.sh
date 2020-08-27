@@ -7,6 +7,16 @@ SCRIPT_DIR=${BASE_DIR}/scripts
 action=$1
 target=$2
 
+cat << "EOF"
+       __                     _____
+      / /_  ______ ___  ____ / ___/___  ______   _____  _____
+ __  / / / / / __ `__ \/ __ \\__ \/ _ \/ ___/ | / / _ \/ ___/
+/ /_/ / /_/ / / / / / / /_/ /__/ /  __/ /   | |/ /  __/ /
+\____/\__,_/_/ /_/ /_/ .___/____/\___/_/    |___/\___/_/
+                    /_/
+
+EOF
+
 if [ ! -f "$PROJECT_DIR/config.conf" ]; then
     echo -e "Error: No config file found."
     echo -e "You can run 'cp config_example.conf config.conf', and edit it."
@@ -23,6 +33,7 @@ function usage() {
    echo "  jmsctl --help"
    echo
    echo "Commands: "
+   echo "  download     下载 JumpServer"
    echo "  install      安装 JumpServer"
    echo "  start        启动 JumpServer"
    echo "  stop         停止 JumpServer"
@@ -35,6 +46,9 @@ function usage() {
 
 function main() {
    case "${action}" in
+      download)
+         bash ${SCRIPT_DIR}/download.sh
+         ;;
       install)
          bash ${SCRIPT_DIR}/install.sh
          ;;
