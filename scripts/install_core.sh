@@ -28,7 +28,6 @@ function prepare_install() {
     pip install --upgrade pip setuptools
     pip install -r $install_dir/jumpserver/requirements/requirements.txt
     if [ $? -ne 0 ];then
-        echo > $PROJECT_DIR/$Version/core_flag
         echo "[ERROR] python 依赖安装失败"
         exit 1
     fi

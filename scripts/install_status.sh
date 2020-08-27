@@ -39,12 +39,7 @@ function check_py3() {
         echo -e "[\033[31m ERROR \033[0m]"
         flag=1
     else
-        if [ -f "$PROJECT_DIR/$Version/core_flag" ]; then
-            echo -e "[\033[31m ERROR \033[0m]"
-            flag=1
-        else
-            echo -e "[\033[32m OK \033[0m]"
-        fi
+        echo -e "[\033[32m OK \033[0m]"
     fi
 }
 
