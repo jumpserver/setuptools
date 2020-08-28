@@ -20,7 +20,7 @@ function start_guacamole() {
 }
 
 function check_guacamole() {
-    if [ ! "$(docker exec jms_guacamole env | grep BOOTSTRAP_TOKEN=$BOOTSTRAP_TOKEN)" ] && [ ! "$(docker exec jms_guacamole env | grep JUMPSERVER_SERVER=http://$Server_IP:8080)" ]; then
+    if [ ! "$(docker exec jms_guacamole env | grep BOOTSTRAP_TOKEN=$BOOTSTRAP_TOKEN)" ] || [ ! "$(docker exec jms_guacamole env | grep JUMPSERVER_SERVER=http://$Server_IP:8080)" ]; then
         remove_guacamole
         start_guacamole
     fi

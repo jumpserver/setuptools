@@ -20,7 +20,7 @@ function start_koko() {
 }
 
 function check_koko() {
-    if [ ! "$(docker exec jms_koko env | grep BOOTSTRAP_TOKEN=$BOOTSTRAP_TOKEN)" ] && [ ! "$(docker exec jms_koko env | grep CORE_HOST=http://$Server_IP:8080)" ]; then
+    if [ ! "$(docker exec jms_koko env | grep BOOTSTRAP_TOKEN=$BOOTSTRAP_TOKEN)" ] || [ ! "$(docker exec jms_koko env | grep CORE_HOST=http://$Server_IP:8080)" ]; then
         remove_koko
         start_koko
     fi
