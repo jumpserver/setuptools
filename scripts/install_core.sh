@@ -93,8 +93,10 @@ function main() {
     if [ ! -f "/usr/lib/systemd/system/jms_core.service" ]; then
         config_systemd
     fi
-    if [ ! "$(firewall-cmd --list-all | grep $Docker_IP)" ]; then
-        set_firewall
+    if [ "$(systemctl status firewalld | grep Active | grep running)" ]; then
+        if [ ! "$(firewall-cmd --list-all | grep $Docker_IP)" ]; then
+            set_firewall
+        fi
     fi
 }
 
