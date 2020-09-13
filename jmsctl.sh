@@ -33,7 +33,6 @@ function usage() {
    echo "  jmsctl --help"
    echo
    echo "Commands: "
-   echo "  download     下载 JumpServer"
    echo "  install      安装 JumpServer"
    echo "  start        启动 JumpServer"
    echo "  stop         停止 JumpServer"
@@ -46,9 +45,6 @@ function usage() {
 
 function main() {
    case "${action}" in
-      download)
-         bash ${SCRIPT_DIR}/download.sh
-         ;;
       install)
          bash ${SCRIPT_DIR}/install.sh
          ;;
