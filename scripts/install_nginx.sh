@@ -27,7 +27,6 @@ function dec_luna() {
     mv $install_dir/luna-$Version $install_dir/luna
     if [ "$(getenforce)" != "Disabled" ]; then
         restorecon -R $install_dir/luna/
-        restorecon -R $install_dir/lina/
     fi
 }
 
