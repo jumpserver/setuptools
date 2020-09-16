@@ -24,6 +24,7 @@ if [ ! -f "$PROJECT_DIR/config.conf" ]; then
 fi
 
 source ${PROJECT_DIR}/config.conf
+echo -e "\t\t\t\t\t Version: \033[33m $Version \033[0m \n"
 
 function usage() {
    echo "JumpServer 部署安装脚本"
