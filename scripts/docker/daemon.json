@@ -1,3 +1,4 @@
 {
-    "registry-mirrors": ["https://bmtrgdvx.mirror.aliyuncs.com", "https://hub-mirror.c.163.com", "https://dockerhub.azk8s.cn"]
+    "registry-mirrors": ["https://bmtrgdvx.mirror.aliyuncs.com", "https://hub-mirror.c.163.com", "https://dockerhub.azk8s.cn"],
+    "iptables": false
 }
