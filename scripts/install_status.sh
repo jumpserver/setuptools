@@ -33,6 +33,16 @@ function check_redis() {
     fi
 }
 
+function check_docker() {
+    echo -ne "Docke.  Check \t........................ "
+    if [ ! "$(systemctl status docker | grep Active | grep running)" ]; then
+        echo -e "[\033[31m ERROR \033[0m]"
+        flag=1
+    else
+        echo -e "[\033[32m OK \033[0m]"
+    fi
+}
+
 function check_py3() {
     echo -ne "Py3     Check \t........................ "
     if [ ! -d "$install_dir/py3" ]; then
@@ -54,7 +64,7 @@ function check_core() {
 }
 
 function check_nginx() {
-    echo -ne "Ninx    Check \t........................ "
+    echo -ne "Nginx   Check \t........................ "
     if [ ! "$(systemctl status nginx | grep Active | grep running)" ]; then
         echo -e "[\033[31m ERROR \033[0m]"
         flag=1
@@ -84,6 +94,7 @@ function check_guacamole() {
 function main() {
     check_mysql
     check_redis
+    check_docker
     check_nginx
     check_py3
     check_core

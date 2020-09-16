@@ -20,16 +20,21 @@ function start_koko() {
 }
 
 function check_koko() {
-    if [ ! "$(docker exec jms_koko env | grep BOOTSTRAP_TOKEN=$BOOTSTRAP_TOKEN)" ] || [ ! "$(docker exec jms_koko env | grep CORE_HOST=http://$Server_IP:8080)" ]; then
+    if [ ! "$(docker inspect jms_koko | grep BOOTSTRAP_TOKEN=$BOOTSTRAP_TOKEN)" ] || [ ! "$(docker inspect jms_koko | grep CORE_HOST=http://$Server_IP:8080)" ]; then
         remove_koko
         start_koko
+    else
+        docker start jms_koko
     fi
 }
 
 function main() {
     if [ ! "$(docker ps | grep jms_koko:$Version)" ]; then
-        remove_koko
-        start_koko
+        if [ ! "$(docker ps -a | grep jms_koko:$Version)" ]; then
+            start_koko
+        else
+            check_koko
+        fi
     else
         check_koko
     fi
