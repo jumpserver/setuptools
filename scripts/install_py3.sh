@@ -8,6 +8,7 @@ source ${PROJECT_DIR}/config.conf
 function install_python() {
     echo ">> Install Python3.6"
     yum install -y python36 python36-devel
+    yum install -y python3-devel
 }
 
 function config_py3() {
