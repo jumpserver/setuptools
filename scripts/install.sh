@@ -8,7 +8,7 @@ source ${PROJECT_DIR}/config.conf
 function message() {
     echo ""
     echo -e "JumpServer 部署完成"
-    echo -ne "请到 $install_dir 目录执行"
+    echo -ne "请到 $PROJECT_DIR 目录执行"
     echo -ne "\033[33m ./jmsctl.sh start \033[0m"
     echo -e "启动 \n"
 }
