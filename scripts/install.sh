@@ -58,7 +58,7 @@ function main() {
     bash $BASE_DIR/set_firewall.sh
     bash $BASE_DIR/install_docker.sh
     if [ $DB_HOST == 127.0.0.1 ]; then
-        bash $BASE_DIR/install_mariadb.sh
+        bash $BASE_DIR/install_mysql.sh
     fi
     if [ $REDIS_HOST == 127.0.0.1 ]; then
         bash $BASE_DIR/install_redis.sh

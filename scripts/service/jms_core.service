@@ -1,8 +1,8 @@
 [Unit]
 Description=JumpServer Core Server
 Documentation=https://github.com/jumpserver/jumpserver.git
-After=network.target mariadb.service redis.service docker.service
-Wants=mariadb.service redis.service docker.service
+After=network.target mysqld.service redis.service docker.service
+Wants=mysqld.service redis.service docker.service
 
 [Service]
 Type=forking

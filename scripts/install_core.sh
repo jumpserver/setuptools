@@ -68,7 +68,7 @@ function config_systemd() {
         sed -i "s@/opt@$install_dir@g" /usr/lib/systemd/system/jms_core.service
     fi
     if [ $DB_HOST != 127.0.0.1 ]; then
-        sed -i "s/mariadb.service //g" /usr/lib/systemd/system/jms_core.service
+        sed -i "s/mysqld.service //g" /usr/lib/systemd/system/jms_core.service
     fi
     if [ $REDIS_HOST != 127.0.0.1 ]; then
         sed -i "s/redis.service //g" /usr/lib/systemd/system/jms_core.service

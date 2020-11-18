@@ -17,10 +17,10 @@ function success() {
     echo -e "\033[33m[如果你是云服务器请在安全组放行 $http_port 和 $ssh_port 端口] \n\033[0m"
 }
 
-function start_mariadb() {
+function start_mysqld() {
     echo -ne "MySQL   start \t........................ "
-    if [ ! "$(systemctl status mariadb | grep Active | grep running)" ]; then
-        systemctl start mariadb
+    if [ ! "$(systemctl status mysqld | grep Active | grep running)" ]; then
+        systemctl start mysqld
         if [ $? -ne 0 ]; then
             echo -e "[\033[31m ERROR \033[0m]"
         else
@@ -120,7 +120,7 @@ function start_nginx() {
 
 function main() {
     if [ $DB_HOST == 127.0.0.1 ]; then
-        start_mariadb
+        start_mysqld
     fi
     if [ $REDIS_HOST == 127.0.0.1 ]; then
         start_redis

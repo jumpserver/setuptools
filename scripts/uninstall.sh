@@ -39,9 +39,9 @@ if [ $REDIS_HOST == 127.0.0.1 ]; then
     fi
 fi
 if [ $DB_HOST == 127.0.0.1 ]; then
-    if [ "$(systemctl status mariadb | grep Active | grep running)" ]; then
+    if [ "$(systemctl status mysqld | grep Active | grep running)" ]; then
         mysql -uroot -e"drop user '$DB_USER'@'$DB_HOST';drop database $DB_NAME;flush privileges;"
-        systemctl stop mariadb
+        systemctl stop mysqld
     fi
 fi
 
@@ -78,6 +78,6 @@ if [ "$(getenforce)" != "Disabled" ]; then
 fi
 
 echo -e "\033[31m 已经成功清理 jumpserver 相关文件 \033[0m"
-echo -e "\033[31m 请自行卸载 docker nginx redis mariadb 服务 \033[0m"
-echo -e "\033[31m yum remove -y docker-ce docker-ce-cli nginx redis mariadb-server mariadb-devel mariadb-libs mariadb \033[0m"
+echo -e "\033[31m 请自行卸载 docker nginx redis mysql 服务 \033[0m"
+echo -e "\033[31m yum remove -y docker-ce docker-ce-cli nginx redis mysql \033[0m"
 echo -e "\033[31m 卸载完成后请重启服务器清空路由表 \033[0m"
