@@ -11,8 +11,7 @@ function prepare_set() {
 
 function install_mysql() {
     echo ">> Install MySQL"
-    yum install -y mysql-community-server
-    sed -i "s@--initialize @--initialize-insecure @g" /usr/bin/mysqld_pre_systemd
+    yum install -y mysql-community-server mysql-community-devel
 }
 
 function start_mysql() {
@@ -40,6 +39,9 @@ function main() {
     fi
     if [ ! "$(rpm -qa | grep mysql-community-server)" ]; then
         install_mysql
+    fi
+    if [ ! "$(cat /usr/bin/mysqld_pre_systemd | grep -v ^\# | grep initialize-insecure )" ]; then
+        sed -i "s@--initialize @--initialize-insecure @g" /usr/bin/mysqld_pre_systemd
     fi
     if [ ! "$(systemctl status mysqld | grep Active | grep running)" ]; then
         start_mysql

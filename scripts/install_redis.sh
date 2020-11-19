@@ -5,6 +5,8 @@ BASE_DIR=$(dirname "$0")
 PROJECT_DIR=$(dirname $(cd $(dirname "$0");pwd))
 source ${PROJECT_DIR}/config.conf
 
+flag=0
+
 function install_redis() {
     echo ">> Install redis"
     yum install -y redis
@@ -20,13 +22,18 @@ function start_redis {
 function config_redis() {
     if [ $REDIS_PORT != 6379 ]; then
         sed -i "s/port 6379/port $REDIS_PORT/g" /etc/redis.conf
+        flag=1
     fi
     if [ ! "$(cat /etc/redis.conf | grep -v ^\# | grep requirepass)" ]; then
         sed -i "481i requirepass $REDIS_PASSWORD" /etc/redis.conf
+        flag=1
     else
         sed -i "s/requirepass .*/requirepass $REDIS_PASSWORD/g" /etc/redis.conf
+        flag=1
     fi
-    systemctl restart redis
+    if [ $flag == 1 ]; then
+        systemctl restart redis
+    fi
 }
 
 function config_passwd() {
