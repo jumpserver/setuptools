@@ -6,8 +6,7 @@ PROJECT_DIR=$(dirname $(cd $(dirname "$0");pwd))
 source ${PROJECT_DIR}/config.conf
 
 function prepare_set() {
-    yum -y localinstall https://dev.mysql.com/get/mysql57-community-release-el7-11.noarch.rpm
-    sed -i "s@http://repo.mysql.com/@http://mirrors.ustc.edu.cn/mysql-repo/@g" /etc/yum.repos.d/mysql-community.repo
+    yum -y localinstall http://mirrors.ustc.edu.cn/mysql-repo/mysql57-community-release-el7.rpm
 }
 
 function install_mysql() {
