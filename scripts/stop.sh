@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 #
 
+BASE_DIR=$(dirname "$0")
+PROJECT_DIR=$(dirname $(cd $(dirname "$0");pwd))
+source ${PROJECT_DIR}/config.conf
+
 function stop_koko() {
     echo -ne "Koko    Stop \t........................ "
     docker stop jms_koko >/dev/null 2>&1
@@ -29,6 +33,10 @@ function stop_core() {
     else
         echo -e "[\033[32m OK \033[0m]"
     fi
+    if [ "$(ps aux | grep -v grep | grep py3)" ]; then
+        ps aux | grep py3 | grep -v grep | awk '{print $2}' | xargs kill -9
+    fi
+    rm -f $install_dir/jumpserver/tmp/*.pid
 }
 
 function main() {
