@@ -141,7 +141,13 @@ if [ ! "$(systemctl status jms_core | grep Active | grep running)" ]; then
 fi
 
 if [ "${Version:0:1}" == "1" ]; then
-    rm -f /etc/nginx/conf.d/jumpserver.conf
+    if [ -f "/etc/nginx/conf.d/jumpserver.conf" ]; then
+        if [ ! -f "$jumpserver_backup/jumpserver.conf" ]; then
+            mv /etc/nginx/conf.d/jumpserver.conf $jumpserver_backup/
+        else
+            rm -f /etc/nginx/conf.d/jumpserver.conf
+        fi
+    fi
     if [ ! -f "$PROJECT_DIR/$Upgrade_Version/jumpserver.conf" ]; then
         wget -qO $PROJECT_DIR/$Upgrade_Version/jumpserver.conf http://demo.jumpserver.org/download/nginx/conf.d/latest/jumpserver.conf || {
             rm -f $PROJECT_DIR/$Upgrade_Version/jumpserver.conf
