@@ -24,8 +24,6 @@ function prepare_install() {
         exit 1
     }
     source $install_dir/py3/bin/activate
-    pip install wheel
-    pip install --upgrade pip setuptools
     pip install -r $install_dir/jumpserver/requirements/requirements.txt
     if [ $? -ne 0 ];then
         echo "[ERROR] python 依赖安装失败"
