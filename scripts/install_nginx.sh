@@ -11,7 +11,7 @@ function prepare_set() {
 
 function install_nginx() {
     echo ">> Install Nginx"
-    yum localinstall -y $BASE_DIR/nginx/nginx-1.18.0-1.el7.ngx.x86_64.rpm
+    yum localinstall -y $BASE_DIR/nginx/nginx-1.18.0-2.el7.ngx.x86_64.rpm
 }
 
 function dec_lina() {
