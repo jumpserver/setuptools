@@ -1,4 +1,10 @@
+# 说明
+
+从 v2.6 开始 setuptools 不再维护，它的工作由 https://github.com/jumpserver/installer 来完成，installer 统一了社区和企业版的安装，并且可以做到无缝迁移
+
+
 # JumpServer 安装脚本
+
 
 安装文档 https://docs.jumpserver.org/zh/master/install/setup_by_fast/
 
